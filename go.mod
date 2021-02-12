@@ -2,4 +2,9 @@ module github.com/Phantas0s/gocket
 
 go 1.15
 
-require github.com/spf13/cobra v1.1.1
+require (
+	github.com/motemen/go-pocket v0.0.0-20201204003030-43b897100651
+	github.com/rivo/tview v0.0.0-20210125085121-dbc1f32bb1d0
+	github.com/spf13/cobra v1.1.1
+	github.com/spf13/viper v1.7.0
+)

@@ -6,64 +6,54 @@ import (
 	"time"
 )
 
+const (
+	ContentTypeArticle = "article"
+	ContentTypeVideo   = "video"
+	ContentTypeImage   = "image"
+
+	SortNewest = "newest"
+	SortOldest = "oldest"
+	SortTitle  = "title"
+	SortSite   = "site"
+
+	StateUnread  = "unread"
+	StateArchive = "archive"
+	StateAll     = "all"
+
+	DetailTypeSimple   = "simple"
+	DetailTypeComplete = "complete"
+
+	FavoriteFilterUnspecified = ""
+	FavoriteFilterUnfavorited = "0"
+	FavoriteFilterFavorited   = "1"
+
+	ItemStatusUnread   = 0
+	ItemStatusArchived = 1
+	ItemStatusDeleted  = 2
+
+	ItemMediaAttachmentNoMedia  = 0
+	ItemMediaAttachmentHasMedia = 1
+	ItemMediaAttachmentIsMedia  = 2
+)
+
 // RetrieveOption is the options for retrieve API.
 type RetrieveOption struct {
-	State       State          `json:"state,omitempty"`
-	Favorite    FavoriteFilter `json:"favorite,omitempty"`
-	Tag         string         `json:"tag,omitempty"`
-	ContentType ContentType    `json:"contentType,omitempty"`
-	Sort        Sort           `json:"sort,omitempty"`
-	DetailType  DetailType     `json:"detailType,omitempty"`
-	Search      string         `json:"search,omitempty"`
-	Domain      string         `json:"domain,omitempty"`
-	Since       int            `json:"since,omitempty"`
-	Count       int            `json:"count,omitempty"`
-	Offset      int            `json:"offset,omitempty"`
+	State       string `json:"state,omitempty"`
+	Favorite    string `json:"favorite,omitempty"`
+	Tag         string `json:"tag,omitempty"`
+	ContentType string `json:"contentType,omitempty"`
+	Sort        string `json:"sort,omitempty"`
+	DetailType  string `json:"detailType,omitempty"`
+	Search      string `json:"search,omitempty"`
+	Domain      string `json:"domain,omitempty"`
+	Since       int    `json:"since,omitempty"`
+	Count       int    `json:"count,omitempty"`
+	Offset      int    `json:"offset,omitempty"`
 }
-
-type State string
-
-const (
-	StateUnread  State = "unread"
-	StateArchive       = "archive"
-	StateAll           = "all"
-)
-
-type ContentType string
-
-const (
-	ContentTypeArticle ContentType = "article"
-	ContentTypeVideo               = "video"
-	ContentTypeImage               = "image"
-)
-
-type Sort string
-
-const (
-	SortNewest Sort = "newest"
-	SortOldest      = "oldest"
-	SortTitle       = "title"
-	SortSite        = "site"
-)
-
-type DetailType string
-
-const (
-	DetailTypeSimple   DetailType = "simple"
-	DetailTypeComplete            = "complete"
-)
-
-type FavoriteFilter string
-
-const (
-	FavoriteFilterUnspecified FavoriteFilter = ""
-	FavoriteFilterUnfavorited                = "0"
-	FavoriteFilterFavorited                  = "1"
-)
 
 type retrieveAPIOptionWithAuth struct {
 	*RetrieveOption
-	authInfo
+	*Client
 }
 
 type RetrieveResult struct {
@@ -73,36 +63,28 @@ type RetrieveResult struct {
 	Since    int
 }
 
-type ItemStatus int
-
-const (
-	ItemStatusUnread   ItemStatus = 0
-	ItemStatusArchived            = 1
-	ItemStatusDeleted             = 2
-)
-
-type ItemMediaAttachment int
-
-const (
-	ItemMediaAttachmentNoMedia  ItemMediaAttachment = 0
-	ItemMediaAttachmentHasMedia                     = 1
-	ItemMediaAttachmentIsMedia                      = 2
-)
+func (r RetrieveResult) FlattenList() []Item {
+	newList := []Item{}
+	for _, v := range r.List {
+		newList = append(newList, v)
+	}
+	return newList
+}
 
 type Item struct {
-	ItemID        int        `json:"item_id,string"`
-	ResolvedId    int        `json:"resolved_id,string"`
-	GivenURL      string     `json:"given_url"`
-	ResolvedURL   string     `json:"resolved_url"`
-	GivenTitle    string     `json:"given_title"`
-	ResolvedTitle string     `json:"resolved_title"`
-	Favorite      int        `json:",string"`
-	Status        ItemStatus `json:",string"`
+	ItemID        int    `json:"item_id,string"`
+	ResolvedId    int    `json:"resolved_id,string"`
+	GivenURL      string `json:"given_url"`
+	ResolvedURL   string `json:"resolved_url"`
+	GivenTitle    string `json:"given_title"`
+	ResolvedTitle string `json:"resolved_title"`
+	Favorite      int    `json:",string"`
+	Status        int    `json:",string"`
 	Excerpt       string
-	IsArticle     int                 `json:"is_article,string"`
-	HasImage      ItemMediaAttachment `json:"has_image,string"`
-	HasVideo      ItemMediaAttachment `json:"has_video,string"`
-	WordCount     int                 `json:"word_count,string"`
+	IsArticle     int `json:"is_article,string"`
+	HasImage      int `json:"has_image,string"`
+	HasVideo      int `json:"has_video,string"`
+	WordCount     int `json:"word_count,string"`
 
 	// Fields for detailed response
 	Tags    map[string]map[string]interface{}
@@ -152,7 +134,7 @@ func (item Item) Title() string {
 // Retrieve returns the in Pocket
 func (c *Client) Retrieve(options *RetrieveOption) (*RetrieveResult, error) {
 	data := retrieveAPIOptionWithAuth{
-		authInfo:       c.authInfo,
+		Client:         c,
 		RetrieveOption: options,
 	}
 

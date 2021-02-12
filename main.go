@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Phantas0s/Gocket/cmd"
+	"github.com/Phantas0s/gocket/cmd"
 )
 
 func main() {

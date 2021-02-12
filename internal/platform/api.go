@@ -9,15 +9,8 @@ import (
 
 const URL = "https://getpocket.com"
 
-// DefaultClient is the client used for making all requests
-var DefaultClient = http.DefaultClient
-
 // Client represents a Pocket client that grants OAuth access to your application
 type Client struct {
-	authInfo
-}
-
-type authInfo struct {
 	ConsumerKey string `json:"consumer_key"`
 	AccessToken string `json:"access_token"`
 }
@@ -25,10 +18,8 @@ type authInfo struct {
 // NewClient creates a new Pocket client.
 func NewClient(consumerKey, accessToken string) *Client {
 	return &Client{
-		authInfo: authInfo{
-			ConsumerKey: consumerKey,
-			AccessToken: accessToken,
-		},
+		ConsumerKey: consumerKey,
+		AccessToken: accessToken,
 	}
 }
 
@@ -36,7 +27,7 @@ func toJSON(req *http.Request, res interface{}) error {
 	req.Header.Add("X-Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 
-	resp, err := DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}

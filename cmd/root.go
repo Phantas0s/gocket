@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Phantas0s/gocket/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +14,7 @@ var rootCmd = &cobra.Command{
                 love by spf13 and friends in Go.
                 Complete documentation is available at http://hugo.spf13.com`,
 	Run: func(cmd *cobra.Command, args []string) {
-		internal.List()
+		fmt.Println("Hello")
 	},
 }
 
