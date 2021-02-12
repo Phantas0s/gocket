@@ -1,3 +1,5 @@
+**WIP**
+
 ## Inspired by this CLI
 
 https://github.com/motemen/go-pocket
