@@ -1,16 +1,11 @@
 package internal
 
 import (
-	"fmt"
-
 	"github.com/Phantas0s/gocket/internal/platform"
 )
 
-func DisplayList(
-	consumerKey string,
-	browser string,
-	count int,
-) error {
+func List(consumerKey string, browser string, count int) map[string]string {
+	result := make(map[string]string, count)
 	auth, err := platform.Auth(consumerKey, browser)
 	c := platform.NewClient(consumerKey, auth.AccessToken)
 
@@ -21,14 +16,14 @@ func DisplayList(
 
 	if count == 0 {
 		for _, e := range res.List {
-			fmt.Println(e.URL())
+			result[e.URL()] = e.Title()
 		}
 	} else {
 		l := res.FlattenList()
 		for i := 0; i < count; i++ {
-			fmt.Println(l[i].URL())
+			result[l[i].URL()] = l[i].Title()
 		}
 	}
 
-	return nil
+	return result
 }

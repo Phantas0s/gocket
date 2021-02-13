@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/Phantas0s/gocket/internal"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -34,5 +36,8 @@ func init() {
 }
 
 func runList() {
-	internal.DisplayList(consumerKey, browser, count)
+	list := internal.List(consumerKey, browser, count)
+	for k, _ := range list {
+		os.Stdout.WriteString(k)
+	}
 }
