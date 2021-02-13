@@ -25,7 +25,7 @@ var listCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required)")
-	listCmd.PersistentFlags().StringVarP(&browser, "browser", "b", "", "Broswer to open the authorization URL")
+	listCmd.PersistentFlags().StringVarP(&browser, "browser", "b", "", "Browser to open the authorization URL")
 	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 0, "Number of results (0 for all)")
 
 	listCmd.MarkFlagRequired("key")
@@ -37,7 +37,8 @@ func init() {
 
 func runList() {
 	list := internal.List(consumerKey, browser, count)
-	for k, _ := range list {
-		os.Stdout.WriteString(k)
+	for _, v := range list {
+		// os.Stdout.WriteString(v.URL + "\n")
+		os.Stdout.WriteString(v.URL + " ")
 	}
 }

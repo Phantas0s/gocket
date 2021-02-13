@@ -4,26 +4,31 @@ import (
 	"github.com/Phantas0s/gocket/internal/platform"
 )
 
-func List(consumerKey string, browser string, count int) map[string]string {
-	result := make(map[string]string, count)
+type Website struct {
+	Title string
+	URL   string
+}
+
+func List(consumerKey string, browser string, count int) (websites []Website) {
 	auth, err := platform.Auth(consumerKey, browser)
 	c := platform.NewClient(consumerKey, auth.AccessToken)
 
-	res, err := c.Retrieve(&platform.RetrieveOption{})
+	opts := &platform.RetrieveOption{Sort: platform.SortNewest}
+	if count != 0 {
+		opts.Count = count
+	}
+
+	res, err := c.Retrieve(opts)
 	if err != nil {
 		panic(err)
 	}
 
-	if count == 0 {
-		for _, e := range res.List {
-			result[e.URL()] = e.Title()
-		}
-	} else {
-		l := res.FlattenList()
-		for i := 0; i < count; i++ {
-			result[l[i].URL()] = l[i].Title()
-		}
+	for _, e := range res.List {
+		websites = append(websites, Website{
+			Title: e.Title(),
+			URL:   e.URL(),
+		})
 	}
 
-	return result
+	return
 }
