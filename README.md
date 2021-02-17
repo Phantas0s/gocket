@@ -13,5 +13,15 @@ https://github.com/motemen/go-pocket
 
 ## References
 
-https://getpocket.com/developer/apps/
+### API
+
 https://getpocket.com/developer/docs/authentication
+https://getpocket.com/developer/docs/v3/retrieve
+
+### Apps
+
+https://getpocket.com/developer/apps/
+
+### Libraries
+
+https://pkg.go.dev/github.com/rivo/tview

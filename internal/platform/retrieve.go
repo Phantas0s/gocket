@@ -51,7 +51,7 @@ type RetrieveOption struct {
 	Offset      int    `json:"offset,omitempty"`
 }
 
-type retrieveAPIOptionWithAuth struct {
+type retriveRequest struct {
 	*RetrieveOption
 	*Client
 }
@@ -132,10 +132,15 @@ func (item Item) Title() string {
 }
 
 // Retrieve returns the in Pocket
-func (c *Client) Retrieve(options *RetrieveOption) (*RetrieveResult, error) {
-	data := retrieveAPIOptionWithAuth{
+func (c *Client) Retrieve(count int, sort string) (*RetrieveResult, error) {
+	opts := &RetrieveOption{Sort: sort}
+	if count != 0 {
+		opts.Count = count
+	}
+
+	data := retriveRequest{
 		Client:         c,
-		RetrieveOption: options,
+		RetrieveOption: opts,
 	}
 
 	res := &RetrieveResult{}

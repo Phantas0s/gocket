@@ -1,17 +1,42 @@
 package cmd
 
 import (
+	"bufio"
 	"os"
 
 	"github.com/Phantas0s/gocket/internal"
 	"github.com/Phantas0s/gocket/internal/platform"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var consumerKey, browser, sort string
+var consumerKey, sort string
 var count int
-var tui bool
+var tui, archive bool
+
+func init() {
+	rootCmd.AddCommand(listCmd)
+	listCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required)")
+	listCmd.PersistentFlags().StringVarP(
+		&sort,
+		"sort",
+		"s",
+		"newest",
+		"Sort by 'newest' (default), 'oldest', 'title' or 'url'",
+	)
+	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10)")
+	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "t", false, "Display the TUI")
+	listCmd.PersistentFlags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles")
+	// TODO
+	listCmd.PersistentFlags().BoolVarP(&archive, "noprompt", "n", false, "Doesn't ask you anything (DANGEROUS)")
+
+	listCmd.MarkFlagRequired("key")
+
+	// Cobra shenanigans
+	// viper.BindPFlag("key", listCmd.PersistentFlags().Lookup("key"))
+	// viper.BindPFlag("count", listCmd.PersistentFlags().Lookup("count"))
+	// viper.BindPFlag("sort", listCmd.PersistentFlags().Lookup("sort"))
+	// viper.BindPFlag("output", listCmd.PersistentFlags().Lookup("output"))
+}
 
 var listCmd = &cobra.Command{
 	Use:   "list",
@@ -25,39 +50,31 @@ var listCmd = &cobra.Command{
 	},
 }
 
-func init() {
-	rootCmd.AddCommand(listCmd)
-	listCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required)")
-	listCmd.PersistentFlags().StringVarP(&browser, "browser", "b", "", "Browser to open URLs (included the auth URL)")
-	listCmd.PersistentFlags().StringVarP(
-		&sort,
-		"sort",
-		"s",
-		"newest",
-		"Sort by 'newest' (default), 'oldest', 'title' or 'url'",
-	)
-	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10)")
-	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "t", false, "Display the TUI")
-
-	listCmd.MarkFlagRequired("key")
-
-	viper.BindPFlag("key", listCmd.PersistentFlags().Lookup("key"))
-	viper.BindPFlag("browser", listCmd.PersistentFlags().Lookup("browser"))
-	viper.BindPFlag("count", listCmd.PersistentFlags().Lookup("count"))
-	viper.BindPFlag("sort", listCmd.PersistentFlags().Lookup("sort"))
-	viper.BindPFlag("output", listCmd.PersistentFlags().Lookup("output"))
-}
-
 func runList() {
-	list := internal.List(consumerKey, browser, count, sort)
+	pocket := internal.CreatePocket(consumerKey)
+	list := pocket.List(count, sort)
 	if tui {
 		tui := internal.TUI{Instance: &platform.Tview{}}
 		tui.Display(list)
 	} else {
-		// TODO put that in a proper render function
+		IDs := []int{}
 		for _, v := range list {
 			os.Stdout.WriteString(v.URL + "\n")
+			IDs = append(IDs, v.ID)
 			// os.Stdout.WriteString(v.URL + " ")
+		}
+		if archive {
+			os.Stdout.WriteString("Are you sure you want to archive all the articles above? (y/n)")
+			reader := bufio.NewReader(os.Stdin)
+			i, err := reader.ReadString('\n')
+			if err != nil {
+				panic(err)
+			}
+			if string(i) == "y\n" {
+				pocket.Archive(IDs)
+			} else {
+				os.Stdout.WriteString("Aborted.")
+			}
 		}
 	}
 }

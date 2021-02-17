@@ -4,6 +4,7 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -12,6 +13,10 @@ type Tview struct{}
 func (v *Tview) Display(urls []string, titles []string) {
 	app := tview.NewApplication()
 	list := tview.NewList()
+	list.SetBackgroundColor(tcell.ColorDefault)
+	list.SetSelectedBackgroundColor(tcell.ColorDefault)
+	list.SetSelectedTextColor(tcell.ColorRed)
+	list.SetSelectedFocusOnly(true)
 
 	for i, v := range titles {
 		list.AddItem(v, urls[i], rune(i), func() {

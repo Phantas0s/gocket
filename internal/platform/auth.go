@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"os/exec"
 	"os/user"
 	"path/filepath"
 )
@@ -28,7 +27,7 @@ type Authorization struct {
 // 2. User needs to confirm on a web page.
 // 3. Get a token back - save it to a file.
 // 4. Can retrieve pocket list thanks to token.
-func Auth(consumerKey string, browser string) (Authorization, error) {
+func Auth(consumerKey string) (Authorization, error) {
 	auth := Authorization{}
 	authPath := filepath.Join(configDir(), "auth.json")
 
@@ -58,14 +57,9 @@ func Auth(consumerKey string, browser string) (Authorization, error) {
 
 		url := GenerateAuthorizationURL(requestToken, redirectURL)
 
-		if browser == "" {
-			fmt.Println("Thanks to visit this URL to authorize your CLI: ", url)
-		} else {
-			fmt.Println(fmt.Sprintf("%s '%s'", browser, url))
-			err := exec.Command(browser, url).Start()
-			if err != nil {
-				panic(err)
-			}
+		err = openBrowser(url)
+		if err != nil {
+			panic(err)
 		}
 
 		<-ch
