@@ -13,6 +13,10 @@ https://github.com/motemen/go-pocket
 
 ## References
 
+### Pocket List
+
+https://getpocket.com/my-list
+
 ### API
 
 https://getpocket.com/developer/docs/authentication

@@ -3,29 +3,27 @@ package cmd
 import (
 	"bufio"
 	"os"
+	"strings"
 
 	"github.com/Phantas0s/gocket/internal"
 	"github.com/Phantas0s/gocket/internal/platform"
 	"github.com/spf13/cobra"
 )
 
-var consumerKey, sort string
+var consumerKey, order, since string
 var count int
-var tui, archive bool
+var tui, archive, delete bool
 
 func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required)")
-	listCmd.PersistentFlags().StringVarP(
-		&sort,
-		"sort",
-		"s",
-		"newest",
-		"Sort by 'newest' (default), 'oldest', 'title' or 'url'",
-	)
+	listCmd.PersistentFlags().StringVarP(&order, "order", "o", "newest", "order by 'newest' (default), 'oldest', 'title' or 'url'")
+	listCmd.PersistentFlags().StringVarP(&since, "since", "s", "", "List since specific date (format '2006-01-02')")
 	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10)")
+
 	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "t", false, "Display the TUI")
 	listCmd.PersistentFlags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles")
+	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles")
 	// TODO
 	listCmd.PersistentFlags().BoolVarP(&archive, "noprompt", "n", false, "Doesn't ask you anything (DANGEROUS)")
 
@@ -34,7 +32,7 @@ func init() {
 	// Cobra shenanigans
 	// viper.BindPFlag("key", listCmd.PersistentFlags().Lookup("key"))
 	// viper.BindPFlag("count", listCmd.PersistentFlags().Lookup("count"))
-	// viper.BindPFlag("sort", listCmd.PersistentFlags().Lookup("sort"))
+	// viper.BindPFlag("order", listCmd.PersistentFlags().Lookup("order"))
 	// viper.BindPFlag("output", listCmd.PersistentFlags().Lookup("output"))
 }
 
@@ -52,7 +50,7 @@ var listCmd = &cobra.Command{
 
 func runList() {
 	pocket := internal.CreatePocket(consumerKey)
-	list := pocket.List(count, sort)
+	list := pocket.List(count, order, since)
 	if tui {
 		tui := internal.TUI{Instance: &platform.Tview{}}
 		tui.Display(list)
@@ -70,8 +68,21 @@ func runList() {
 			if err != nil {
 				panic(err)
 			}
-			if string(i) == "y\n" {
+			if strings.Trim(string(i), "\n") == "y" {
 				pocket.Archive(IDs)
+			} else {
+				os.Stdout.WriteString("Aborted.")
+			}
+		}
+		if delete {
+			os.Stdout.WriteString("Are you sure you want to DELETE all the articles above? (y/n)")
+			reader := bufio.NewReader(os.Stdin)
+			i, err := reader.ReadString('\n')
+			if err != nil {
+				panic(err)
+			}
+			if strings.Trim(string(i), "\n") == "y" {
+				pocket.Delete(IDs)
 			} else {
 				os.Stdout.WriteString("Aborted.")
 			}

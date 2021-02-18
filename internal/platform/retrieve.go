@@ -2,6 +2,9 @@ package platform
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"os"
 	"strconv"
 	"time"
 )
@@ -46,7 +49,7 @@ type RetrieveOption struct {
 	DetailType  string `json:"detailType,omitempty"`
 	Search      string `json:"search,omitempty"`
 	Domain      string `json:"domain,omitempty"`
-	Since       int    `json:"since,omitempty"`
+	Since       int64  `json:"since,omitempty"`
 	Count       int    `json:"count,omitempty"`
 	Offset      int    `json:"offset,omitempty"`
 }
@@ -61,6 +64,34 @@ type RetrieveResult struct {
 	Status   int
 	Complete int
 	Since    int
+}
+
+func (r *RetrieveResult) UnmarshalJSON(data []byte) error {
+	var d map[string]interface{}
+	if err := json.Unmarshal(data, &d); err != nil {
+		return err
+	}
+
+	switch v := d["list"].(type) {
+	case []interface{}:
+		if len(v) == 0 {
+			r.List = nil
+		}
+	case map[string]interface{}:
+		tmp := struct {
+			List map[string]Item
+		}{}
+		if err := json.Unmarshal(data, &tmp); err != nil {
+			return err
+		}
+		r.List = tmp.List
+	}
+
+	r.Status = int(d["status"].(float64))
+	r.Complete = int(d["complete"].(float64))
+	r.Since = int(d["since"].(float64))
+
+	return nil
 }
 
 func (r RetrieveResult) FlattenList() []Item {
@@ -132,10 +163,18 @@ func (item Item) Title() string {
 }
 
 // Retrieve returns the in Pocket
-func (c *Client) Retrieve(count int, sort string) (*RetrieveResult, error) {
-	opts := &RetrieveOption{Sort: sort}
+func (c *Client) Retrieve(count int, sort string, since string) *RetrieveResult {
+	opts := &RetrieveOption{Sort: mapSort(sort)}
 	if count != 0 {
 		opts.Count = count
+	}
+	if since != "" {
+		s, err := time.Parse("2006-01-02", since)
+		if err != nil {
+			panic(err)
+		}
+
+		opts.Since = s.Unix()
 	}
 
 	data := retriveRequest{
@@ -146,8 +185,24 @@ func (c *Client) Retrieve(count int, sort string) (*RetrieveResult, error) {
 	res := &RetrieveResult{}
 	err := Post("/v3/get", data, res)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
-	return res, nil
+	return res
+}
+
+func mapSort(sort string) string {
+	switch sort {
+	case "newest":
+		return SortNewest
+	case "oldest":
+		return SortOldest
+	case "title":
+		return SortTitle
+	case "url":
+		return SortSite
+	default:
+		os.Stderr.WriteString(fmt.Sprintf("ERROR: '%s' is not a valid order. Default to 'newest'.\n\n", sort))
+		return SortNewest
+	}
 }

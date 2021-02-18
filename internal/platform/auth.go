@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-var Origin = "https://getpocket.com"
+const authURL = "https://getpocket.com/auth/authorize"
 
 type RequestToken struct {
 	Code string `json:"code"`
@@ -48,14 +48,12 @@ func Auth(consumerKey string) (Authorization, error) {
 			}))
 		defer ts.Close()
 
-		redirectURL := ts.URL
-
-		requestToken, err := ObtainRequestToken(consumerKey, redirectURL)
+		requestToken, err := ObtainRequestToken(consumerKey, ts.URL)
 		if err != nil {
 			panic(err)
 		}
 
-		url := GenerateAuthorizationURL(requestToken, redirectURL)
+		url := GenerateAuthorizationURL(requestToken, ts.URL)
 
 		err = openBrowser(url)
 		if err != nil {
@@ -135,5 +133,5 @@ func ObtainAccessToken(consumerKey string, requestToken *RequestToken) (string, 
 
 func GenerateAuthorizationURL(requestToken *RequestToken, redirectURL string) string {
 	values := url.Values{"request_token": {requestToken.Code}, "redirect_uri": {redirectURL}}
-	return fmt.Sprintf("%s/auth/authorize?%s", Origin, values.Encode())
+	return fmt.Sprintf("%s?%s", authURL, values.Encode())
 }

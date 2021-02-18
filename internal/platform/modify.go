@@ -49,6 +49,14 @@ func (c *Client) Unarchive(IDs []int) (*ModifyResult, error) {
 	return c.modify(acs)
 }
 
+func (c *Client) Delete(IDs []int) (*ModifyResult, error) {
+	acs := []Modify{}
+	for _, v := range IDs {
+		acs = append(acs, Modify{Action: delete, ID: v})
+	}
+	return c.modify(acs)
+}
+
 func (c *Client) modify(modifies []Modify) (*ModifyResult, error) {
 	data := modifyRequest{
 		Client:   c,
