@@ -12,20 +12,20 @@ import (
 
 var consumerKey, order, since string
 var count int
-var tui, archive, delete bool
+var tui, archive, delete, noprompt, title bool
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-	listCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required)")
-	listCmd.PersistentFlags().StringVarP(&order, "order", "o", "newest", "order by 'newest' (default), 'oldest', 'title' or 'url'")
-	listCmd.PersistentFlags().StringVarP(&since, "since", "s", "", "List since specific date (format '2006-01-02')")
-	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10)")
+	listCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
+	listCmd.PersistentFlags().StringVarP(&order, "order", "o", "newest", "order by 'newest' (default), 'oldest', 'title' or 'url'.")
+	listCmd.PersistentFlags().StringVarP(&since, "since", "s", "", "List since specific date (format '2006-01-02').")
+	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10).")
 
-	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "t", false, "Display the TUI")
-	listCmd.PersistentFlags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles")
-	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles")
-	// TODO
-	listCmd.PersistentFlags().BoolVarP(&archive, "noprompt", "n", false, "Doesn't ask you anything (DANGEROUS)")
+	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the TUI.")
+	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the title.")
+	listCmd.PersistentFlags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles.")
+	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles.")
+	listCmd.PersistentFlags().BoolVarP(&noprompt, "noprompt", "", false, "Doesn't ask you anything (DANGEROUS).")
 
 	listCmd.MarkFlagRequired("key")
 
@@ -53,39 +53,44 @@ func runList() {
 	list := pocket.List(count, order, since)
 	if tui {
 		tui := internal.TUI{Instance: &platform.Tview{}}
-		tui.Display(list)
+		tui.List(list)
 	} else {
 		IDs := []int{}
 		for _, v := range list {
-			os.Stdout.WriteString(v.URL + "\n")
 			IDs = append(IDs, v.ID)
-			// os.Stdout.WriteString(v.URL + " ")
+			if title {
+				os.Stdout.WriteString(v.Title + " " + v.URL + "\n")
+			} else {
+				os.Stdout.WriteString(v.URL + "\n")
+			}
 		}
+
 		if archive {
-			os.Stdout.WriteString("Are you sure you want to archive all the articles above? (y/n)")
-			reader := bufio.NewReader(os.Stdin)
-			i, err := reader.ReadString('\n')
-			if err != nil {
-				panic(err)
-			}
-			if strings.Trim(string(i), "\n") == "y" {
+			if noprompt || prompt("Do you really want to archive all the articles listed?") {
 				pocket.Archive(IDs)
-			} else {
-				os.Stdout.WriteString("Aborted.")
 			}
 		}
+
 		if delete {
-			os.Stdout.WriteString("Are you sure you want to DELETE all the articles above? (y/n)")
-			reader := bufio.NewReader(os.Stdin)
-			i, err := reader.ReadString('\n')
-			if err != nil {
-				panic(err)
-			}
-			if strings.Trim(string(i), "\n") == "y" {
+			if noprompt || prompt("Do you really want to DELETE all the articles listed?") {
 				pocket.Delete(IDs)
-			} else {
-				os.Stdout.WriteString("Aborted.")
 			}
 		}
+	}
+}
+
+func prompt(message string) bool {
+	os.Stdout.WriteString(message + " (y/n)")
+	reader := bufio.NewReader(os.Stdin)
+	i, err := reader.ReadString('\n')
+	if err != nil {
+		panic(err)
+	}
+
+	if strings.Trim(string(i), "\n") == "y" {
+		return true
+	} else {
+		os.Stdout.WriteString("Aborted.")
+		return false
 	}
 }

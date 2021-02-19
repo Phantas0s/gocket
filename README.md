@@ -19,7 +19,7 @@ https://getpocket.com/my-list
 
 ### API
 
-https://getpocket.com/developer/docs/authentication
+https://etpocket.com/developer/docs/authentication
 https://getpocket.com/developer/docs/v3/retrieve
 
 ### Apps

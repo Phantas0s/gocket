@@ -1,5 +1,7 @@
 package platform
 
+import "fmt"
+
 const (
 	add        = "add"
 	archive    = "archive"
@@ -29,7 +31,7 @@ type modifyRequest struct {
 
 type ModifyResult struct {
 	// The results for each of the requested actions.
-	ActionResults []bool
+	ActionResults []string
 	Status        int
 }
 
@@ -68,6 +70,7 @@ func (c *Client) modify(modifies []Modify) (*ModifyResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(res)
 
 	return &res, nil
 }

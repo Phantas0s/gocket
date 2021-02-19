@@ -47,7 +47,6 @@ func (p *pocket) List(count int, order string, since string) (websites []Website
 }
 
 func (p *pocket) Archive(IDs []int) {
-	//TODO do something with result?
 	_, err := p.client.Archive(IDs)
 	if err != nil {
 		panic(err)

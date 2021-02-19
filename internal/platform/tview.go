@@ -10,7 +10,7 @@ import (
 
 type Tview struct{}
 
-func (v *Tview) Display(urls []string, titles []string) {
+func (v *Tview) List(urls []string, titles []string) {
 	app := tview.NewApplication()
 	list := tview.NewList()
 	list.SetBackgroundColor(tcell.ColorDefault)
@@ -19,8 +19,9 @@ func (v *Tview) Display(urls []string, titles []string) {
 	list.SetSelectedFocusOnly(true)
 
 	for i, v := range titles {
-		list.AddItem(v, urls[i], rune(i), func() {
-			openBrowser(urls[i])
+		url := urls[i]
+		list.AddItem(v, url, rune(i), func() {
+			openBrowser(url)
 		})
 	}
 
