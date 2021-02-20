@@ -10,15 +10,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var consumerKey, order, since string
+var consumerKey, order, search string
 var count int
 var tui, archive, delete, noprompt, title bool
 
 func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
-	listCmd.PersistentFlags().StringVarP(&order, "order", "o", "newest", "order by 'newest' (default), 'oldest', 'title' or 'url'.")
-	listCmd.PersistentFlags().StringVarP(&since, "since", "s", "", "List since specific date (format '2006-01-02').")
+	listCmd.PersistentFlags().StringVarP(
+		&order,
+		"order",
+		"o",
+		"newest",
+		"order by 'newest' (default), 'oldest', 'title', or 'url'.",
+	)
+	listCmd.PersistentFlags().StringVarP(&search, "search", "s", "", "Only list items with title or URL matching the search.")
 	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10).")
 
 	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the TUI.")
@@ -50,7 +56,7 @@ var listCmd = &cobra.Command{
 
 func runList() {
 	pocket := internal.CreatePocket(consumerKey)
-	list := pocket.List(count, order, since)
+	list := pocket.List(count, order, search)
 	if tui {
 		tui := internal.TUI{Instance: &platform.Tview{}}
 		tui.List(list)

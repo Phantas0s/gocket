@@ -32,8 +32,8 @@ func CreatePocket(consumerKey string) *pocket {
 	}
 }
 
-func (p *pocket) List(count int, order string, since string) (websites []Website) {
-	res := p.client.Retrieve(count, order, since)
+func (p *pocket) List(count int, order string, search string) (websites []Website) {
+	res := p.client.Retrieve(count, order, search)
 
 	for _, e := range res.List {
 		websites = append(websites, Website{

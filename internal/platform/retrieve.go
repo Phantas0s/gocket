@@ -163,18 +163,13 @@ func (item Item) Title() string {
 }
 
 // Retrieve returns the in Pocket
-func (c *Client) Retrieve(count int, sort string, since string) *RetrieveResult {
+func (c *Client) Retrieve(count int, sort string, search string) *RetrieveResult {
 	opts := &RetrieveOption{Sort: mapSort(sort)}
 	if count != 0 {
 		opts.Count = count
 	}
-	if since != "" {
-		s, err := time.Parse("2006-01-02", since)
-		if err != nil {
-			panic(err)
-		}
-
-		opts.Since = s.Unix()
+	if search != "" {
+		opts.Search = search
 	}
 
 	data := retriveRequest{
