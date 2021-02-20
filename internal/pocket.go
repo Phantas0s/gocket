@@ -33,7 +33,10 @@ func CreatePocket(consumerKey string) *pocket {
 }
 
 func (p *pocket) List(count int, order string, search string) (websites []Website) {
-	res := p.client.Retrieve(count, order, search)
+	res, err := p.client.Retrieve(count, order, search)
+	if err != nil {
+		panic(err)
+	}
 
 	for _, e := range res.List {
 		websites = append(websites, Website{
@@ -55,6 +58,13 @@ func (p *pocket) Archive(IDs []int) {
 
 func (p *pocket) Delete(IDs []int) {
 	_, err := p.client.Delete(IDs)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (p *pocket) Add(URL string) {
+	err := p.client.Add(URL)
 	if err != nil {
 		panic(err)
 	}

@@ -28,7 +28,7 @@ func init() {
 	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10).")
 
 	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the TUI.")
-	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the title.")
+	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the title the line before the URL.")
 	listCmd.PersistentFlags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles.")
 	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles.")
 	listCmd.PersistentFlags().BoolVarP(&noprompt, "noprompt", "", false, "Doesn't ask you anything (DANGEROUS).")
@@ -65,10 +65,9 @@ func runList() {
 		for _, v := range list {
 			IDs = append(IDs, v.ID)
 			if title {
-				os.Stdout.WriteString(v.Title + " " + v.URL + "\n")
-			} else {
-				os.Stdout.WriteString(v.URL + "\n")
+				os.Stdout.WriteString(v.Title + "\n")
 			}
+			os.Stdout.WriteString(v.URL + "\n")
 		}
 
 		if archive {

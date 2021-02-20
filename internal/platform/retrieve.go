@@ -163,7 +163,7 @@ func (item Item) Title() string {
 }
 
 // Retrieve returns the in Pocket
-func (c *Client) Retrieve(count int, sort string, search string) *RetrieveResult {
+func (c *Client) Retrieve(count int, sort string, search string) (*RetrieveResult, error) {
 	opts := &RetrieveOption{Sort: mapSort(sort)}
 	if count != 0 {
 		opts.Count = count
@@ -180,10 +180,10 @@ func (c *Client) Retrieve(count int, sort string, search string) *RetrieveResult
 	res := &RetrieveResult{}
 	err := Post("/v3/get", data, res)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return res
+	return res, nil
 }
 
 func mapSort(sort string) string {
