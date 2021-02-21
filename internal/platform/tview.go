@@ -18,11 +18,14 @@ func (v *Tview) List(urls []string, titles []string) {
 	list.SetSelectedTextColor(tcell.ColorRed)
 	list.SetSelectedFocusOnly(true)
 
+	mapping(app)
+
 	for i, v := range titles {
 		url := urls[i]
 		list.AddItem(v, url, rune(i), func() {
 			openBrowser(url)
 		})
+
 	}
 
 	list.AddItem("Quit", "Press to exit", 'q', func() {
@@ -32,6 +35,24 @@ func (v *Tview) List(urls []string, titles []string) {
 	if err := app.SetRoot(list, true).SetFocus(list).Run(); err != nil {
 		panic(err)
 	}
+}
+
+func help(app *tview.Application) {
+	app.NewModal().SetText("Help")
+}
+
+func mapping(app *tview.Application) {
+	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Rune() == 'x' {
+			help(app)
+		} else if event.Rune() == '?' {
+		}
+		return event
+	})
+
+	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		return event
+	})
 }
 
 // open opens the specified URL in the default browser of the user.

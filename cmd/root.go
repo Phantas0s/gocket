@@ -9,10 +9,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "gocket",
-	Short: "Hugo is a very fast static site generator",
-	Long: `A Fast and Flexible Static Site Generator built with
-                love by spf13 and friends in Go.
-                Complete documentation is available at http://hugo.spf13.com`,
+	Short: "Pocket in the shell",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Hello")
 	},
