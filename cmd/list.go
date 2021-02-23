@@ -31,7 +31,6 @@ func init() {
 	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the title the line before the URL.")
 	listCmd.PersistentFlags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles.")
 	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles.")
-	listCmd.PersistentFlags().BoolVarP(&noprompt, "noprompt", "", false, "Doesn't ask you anything (DANGEROUS).")
 
 	listCmd.MarkFlagRequired("key")
 

@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"fmt"
 	"os/exec"
 	"runtime"
 
@@ -13,28 +14,28 @@ type Tview struct{}
 func (v *Tview) List(urls []string, titles []string) {
 	app := tview.NewApplication()
 	list := tview.NewList()
-	list.SetBackgroundColor(tcell.ColorDefault)
-	list.SetSelectedBackgroundColor(tcell.ColorDefault)
+
 	list.SetSelectedTextColor(tcell.ColorRed)
-	list.SetSelectedFocusOnly(true)
+	list.SetSelectedBackgroundColor(tcell.ColorBlack)
+	list.SetSelectedFocusOnly(true).
+		SetBackgroundColor(tcell.ColorBlack).
+		SetBorder(true).
+		SetBorderColor(tcell.ColorWhite)
 
 	pages := tview.NewPages()
-	modal := tview.NewModal().SetText("Hello").SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-		pages.HidePage("modal")
-	})
-
-	pages.AddPage("modal", modal, false, false)
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == 'H' {
-			pages.ShowPage("modal")
+		if event.Rune() == 'q' {
+			app.Stop()
 		}
 		return event
 	})
 
-	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		return event
-	})
+	f := func(mod *tview.Modal, action string) func(int, string, string, rune) {
+		return func(i int, main string, sec string, r rune) {
+			mod.SetText(fmt.Sprintf("Are you sure you want to delete \"%s\"?", main))
+		}
+	}
 
 	for i, v := range titles {
 		url := urls[i]
@@ -43,46 +44,48 @@ func (v *Tview) List(urls []string, titles []string) {
 		})
 
 	}
+	pages.AddPage("list", list, true, true)
+
+	delete := tview.NewModal().AddButtons([]string{"Yes", "No"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			pages.SendToFront("list")
+			pages.SendToBack("delete")
+			pages.HidePage("delete")
+		}).SetFocus(0)
+	list.SetChangedFunc(f(delete, "delete"))
+	pages.AddPage("delete", delete, false, false)
 
 	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 'j' {
 			list.SetCurrentItem(list.GetCurrentItem() + 1)
 		} else if event.Rune() == 'k' {
 			list.SetCurrentItem(list.GetCurrentItem() - 1)
+		} else if event.Rune() == 'x' {
+			pages.SendToBack("list")
+			pages.SendToFront("delete")
+			pages.ShowPage("delete")
 		}
 
 		return event
 	})
 
-	list.AddItem("Quit", "Press to exit", 'q', func() {
-		app.Stop()
-	})
+	txt := tview.NewTextView().
+		SetDynamicColors(true).
+		SetRegions(true).
+		SetWordWrap(true)
 
-	showpage := false
-	modal.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == '?' {
-			showpage = !showpage
-			pages.HidePage("modal")
-		}
-		return event
-	})
+	txt.SetBorder(true).
+		SetBorderColor(tcell.ColorWhite).
+		SetBackgroundColor(tcell.ColorDefault)
 
-	// Create the main layout.
 	layout := tview.NewFlex().
-		AddItem(list, 0, 1, false).
-		AddItem(pages, 0, 0, false)
+		SetDirection(tview.FlexRow).
+		AddItem(pages, 0, 10, true).
+		AddItem(txt, 0, 1, false)
 
-	layout.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == '?' {
-			showpage = !showpage
-			if showpage {
-				pages.ShowPage("modal")
-			}
-		}
-		return event
-	})
+	fmt.Fprint(txt, "'a' to archive | 'x' to delete")
 
-	if err := app.SetRoot(layout, true).SetFocus(list).Run(); err != nil {
+	if err := app.SetRoot(layout, true).Run(); err != nil {
 		panic(err)
 	}
 }
