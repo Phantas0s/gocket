@@ -60,7 +60,7 @@ type retriveRequest struct {
 }
 
 type RetrieveResult struct {
-	List     map[string]Item
+	List     []Item
 	Status   int
 	Complete int
 	Since    int
@@ -84,7 +84,11 @@ func (r *RetrieveResult) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &tmp); err != nil {
 			return err
 		}
-		r.List = tmp.List
+		i := make([]Item, len(tmp.List))
+		for _, v := range tmp.List {
+			i[v.SortId] = v
+		}
+		r.List = i
 	}
 
 	r.Status = int(d["status"].(float64))
@@ -164,6 +168,9 @@ func (item Item) Title() string {
 
 // Retrieve returns the in Pocket
 func (c *Client) Retrieve(count int, sort string, search string) (*RetrieveResult, error) {
+	if sort == "" {
+		sort = SortNewest
+	}
 	opts := &RetrieveOption{Sort: mapSort(sort)}
 	if count != 0 {
 		opts.Count = count

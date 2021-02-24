@@ -9,14 +9,31 @@ import (
 	"github.com/rivo/tview"
 )
 
+const (
+	EventDelete  = "delete"
+	EventArchive = "archive"
+)
+
+type event struct {
+	action string
+	ID     int
+	listID int
+}
+
 type Tview struct{}
 
-func (v *Tview) List(urls []string, titles []string) {
+func (v *Tview) List(
+	URLs []string,
+	titles []string,
+	IDs []int,
+	archiver func(IDs []int),
+	deleter func(IDs []int),
+) {
 	app := tview.NewApplication()
 	list := tview.NewList()
 
-	list.SetSelectedTextColor(tcell.ColorRed)
-	list.SetSelectedBackgroundColor(tcell.ColorBlack)
+	list.SetSelectedTextColor(tcell.ColorBlack)
+	list.SetSelectedBackgroundColor(tcell.ColorBlue)
 	list.SetSelectedFocusOnly(true).
 		SetBackgroundColor(tcell.ColorBlack).
 		SetBorder(true).
@@ -31,39 +48,83 @@ func (v *Tview) List(urls []string, titles []string) {
 		return event
 	})
 
-	f := func(mod *tview.Modal, action string) func(int, string, string, rune) {
-		return func(i int, main string, sec string, r rune) {
-			mod.SetText(fmt.Sprintf("Are you sure you want to delete \"%s\"?", main))
-		}
-	}
-
 	for i, v := range titles {
-		url := urls[i]
-		list.AddItem(v, url, rune(i), func() {
+		url := URLs[i]
+		list.AddItem(v, url, 0, func() {
 			openBrowser(url)
 		})
 
 	}
 	pages.AddPage("list", list, true, true)
 
+	e := event{}
+	listChangedFunc := func(mod *tview.Modal, action string, e *event) func(int, string, string, rune) {
+		return func(i int, main string, sec string, r rune) {
+			mod.SetText(fmt.Sprintf("Are you sure you want to %s \"%s\"?", action, main))
+			e.ID = IDs[i]
+			e.listID = i
+		}
+	}
+
 	delete := tview.NewModal().AddButtons([]string{"Yes", "No"}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			pages.SendToFront("list")
 			pages.SendToBack("delete")
 			pages.HidePage("delete")
+			if buttonLabel == "Yes" {
+				deleter([]int{e.ID})
+				list.RemoveItem(e.listID)
+				URLs = append(URLs[:e.listID], URLs[e.listID+1:]...)
+				titles = append(titles[:e.listID], titles[e.listID+1:]...)
+				IDs = append(IDs[:e.listID], IDs[e.listID+1:]...)
+			}
 		}).SetFocus(0)
-	list.SetChangedFunc(f(delete, "delete"))
+
+	archive := tview.NewModal().AddButtons([]string{"Yes", "No"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			pages.SendToFront("list")
+			pages.SendToBack("archive")
+			pages.HidePage("archive")
+			if buttonLabel == "Yes" {
+				archiver([]int{e.ID})
+				list.RemoveItem(e.listID)
+				URLs = append(URLs[:e.listID], URLs[e.listID+1:]...)
+				titles = append(titles[:e.listID], titles[e.listID+1:]...)
+				IDs = append(IDs[:e.listID], IDs[e.listID+1:]...)
+			}
+		}).SetFocus(0)
+	list.SetChangedFunc(listChangedFunc(archive, "archive", &e))
+
 	pages.AddPage("delete", delete, false, false)
+	pages.AddPage("archive", archive, false, false)
+
+	delete.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Rune() == 'j' {
+			return tcell.NewEventKey(tcell.KeyDown, 0, tcell.ModNone)
+		} else if event.Rune() == 'k' {
+			return tcell.NewEventKey(tcell.KeyUp, 0, tcell.ModNone)
+		}
+		return event
+	})
 
 	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 'j' {
-			list.SetCurrentItem(list.GetCurrentItem() + 1)
+			return tcell.NewEventKey(tcell.KeyDown, 0, tcell.ModNone)
 		} else if event.Rune() == 'k' {
-			list.SetCurrentItem(list.GetCurrentItem() - 1)
+			return tcell.NewEventKey(tcell.KeyUp, 0, tcell.ModNone)
+		} else if event.Rune() == 'G' {
+			return tcell.NewEventKey(tcell.KeyPgUp, 0, tcell.ModNone)
+		} else if event.Rune() == 'g' {
+			return tcell.NewEventKey(tcell.KeyPgDn, 0, tcell.ModNone)
+			//TODO CTRL+D / CTRL+U?
 		} else if event.Rune() == 'x' {
 			pages.SendToBack("list")
 			pages.SendToFront("delete")
 			pages.ShowPage("delete")
+		} else if event.Rune() == 'a' {
+			pages.SendToBack("list")
+			pages.SendToFront("archive")
+			pages.ShowPage("archive")
 		}
 
 		return event
@@ -76,7 +137,7 @@ func (v *Tview) List(urls []string, titles []string) {
 
 	txt.SetBorder(true).
 		SetBorderColor(tcell.ColorWhite).
-		SetBackgroundColor(tcell.ColorDefault)
+		SetBackgroundColor(tcell.ColorBlack)
 
 	layout := tview.NewFlex().
 		SetDirection(tview.FlexRow).

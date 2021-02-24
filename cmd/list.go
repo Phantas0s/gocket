@@ -57,7 +57,7 @@ func runList() {
 	pocket := internal.CreatePocket(consumerKey)
 	list := pocket.List(count, order, search)
 	if tui {
-		tui := internal.TUI{Instance: &platform.Tview{}}
+		tui := internal.TUI{Instance: &platform.Tview{}, Pocket: pocket}
 		tui.List(list)
 	} else {
 		IDs := []int{}

@@ -1,7 +1,5 @@
 package platform
 
-import "fmt"
-
 const (
 	add        = "add"
 	archive    = "archive"
@@ -70,7 +68,6 @@ func (c *Client) modify(modifies []Modify) (*ModifyResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(res)
 
 	return &res, nil
 }
