@@ -12,7 +12,7 @@ import (
 
 var consumerKey, order, search string
 var count int
-var tui, archive, delete, noprompt, title bool
+var tui, archive, delete, noconfirm, title bool
 
 func init() {
 	rootCmd.AddCommand(listCmd)
@@ -31,6 +31,7 @@ func init() {
 	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the title the line before the URL.")
 	listCmd.PersistentFlags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles.")
 	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles.")
+	listCmd.PersistentFlags().BoolVarP(&noconfirm, "noconfirm", "", false, "Don't ask for any confirmation.")
 
 	listCmd.MarkFlagRequired("key")
 
@@ -70,13 +71,13 @@ func runList() {
 		}
 
 		if archive {
-			if noprompt || prompt("Do you really want to archive all the articles listed?") {
+			if noconfirm || prompt("Do you really want to archive all the articles listed?") {
 				pocket.Archive(IDs)
 			}
 		}
 
 		if delete {
-			if noprompt || prompt("Do you really want to DELETE all the articles listed?") {
+			if noconfirm || prompt("Do you really want to DELETE all the articles listed?") {
 				pocket.Delete(IDs)
 			}
 		}
