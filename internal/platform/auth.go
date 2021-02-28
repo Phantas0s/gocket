@@ -7,8 +7,9 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"os/user"
 	"path/filepath"
+
+	"github.com/adrg/xdg"
 )
 
 const authURL = "https://getpocket.com/auth/authorize"
@@ -24,7 +25,7 @@ type Authorization struct {
 
 // OAuth2
 // 1. Send the consumer key.
-// 2. User needs to confirm on a web page.
+// 2. User needs to confirm on a webpage.
 // 3. Get a token back - save it to a file.
 // 4. Can retrieve pocket list thanks to token.
 func Auth(consumerKey string) (Authorization, error) {
@@ -83,14 +84,9 @@ func Auth(consumerKey string) (Authorization, error) {
 }
 
 func configDir() (configDir string) {
-	usr, err := user.Current()
+	err := os.MkdirAll(filepath.Join(xdg.ConfigHome, "gocket"), 0755)
 	if err != nil {
-		panic(err)
-	}
-
-	configDir = filepath.Join(usr.HomeDir, ".config", "gocket")
-	err = os.MkdirAll(configDir, 0777)
-	if err != nil {
+		// TODO return error
 		panic(err)
 	}
 

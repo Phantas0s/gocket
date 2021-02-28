@@ -8,11 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(addCmd)
-	addCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
-}
-
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a pocket article",
