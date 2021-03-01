@@ -1,3 +1,5 @@
+# WIP - this is not ready yet :)
+
 # Gocket
 
 A simple CLI (or TUI) for Pocket.
