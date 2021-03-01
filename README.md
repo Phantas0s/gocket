@@ -25,10 +25,26 @@ You need to clone this repository and build the binary in the root directory.
 
 ## Authorization
 
+You need to authorize gocket to access your Pocket account. It's very easy:
 
+1. Go to [Gocket apps and create an app](https://getpocket.com/developer/apps/).
+2. The easiest way is to create a config file in your current directory or in `$XDG_CONFIG_HOME/gocket/config.yml`
+    * Create an entry with `key` as index and the consumer key as value, i.e `key: 1234-5a6b7c`.
+    * Your config can be YAML, TOML, or JSON file.
+3. You'll have to confirm the authorization: a webpage will open in your new favorite browser to do so.
+4. You can use gocket!
+
+XDG_CONFIG_HOME: (TODO)
+Unix systems: `~/.config` 
+macOS: ~/Library/Application Support
+Windows: %LOCALAPPDATA%
+
+If you wonder what's the value of $XDG_CONFIG_HOME for your system, you can look [at this page](https://github.com/adrg/xdg).
 
 ## Usage
+
 ## Keybindings
+
 ## Video Tutorial
 
 
@@ -62,4 +78,3 @@ https://pkg.go.dev/github.com/rivo/tview
 ## Model
 
 Keybindings: https://github.com/jesseduffield/lazydocker/blob/master/docs/keybindings/Keybindings_en.md
-
