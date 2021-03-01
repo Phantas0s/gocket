@@ -84,7 +84,8 @@ func Auth(consumerKey string) (Authorization, error) {
 }
 
 func configDir() (configDir string) {
-	err := os.MkdirAll(filepath.Join(xdg.ConfigHome, "gocket"), 0755)
+	configDir = filepath.Join(xdg.ConfigHome, "gocket")
+	err := os.MkdirAll(configDir, 0755)
 	if err != nil {
 		// TODO return error
 		panic(err)

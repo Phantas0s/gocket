@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
 	"github.com/adrg/xdg"
@@ -13,29 +14,43 @@ import (
 
 var consumerKey string
 
-var rootCmd = &cobra.Command{
-	Use:   "gocket",
-	Short: "Pocket in the shell",
-	Run:   func(cmd *cobra.Command, args []string) {},
+func rootCmd(v *viper.Viper) *cobra.Command {
+	return &cobra.Command{
+		Use:   "gocket",
+		Short: "Pocket in the shell",
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			bindFlagToConfig(cmd, v)
+			verifyKey(cmd)
+		},
+	}
 }
 
-func init() {
-	rootCmd.AddCommand(listCmd)
-	rootCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
-	viper.BindPFlag("key", rootCmd.PersistentFlags().Lookup("key"))
-	rootCmd.AddCommand(addCmd)
+func initConfig() *viper.Viper {
+	v := viper.New()
+	v.AddConfigPath(filepath.Join(xdg.ConfigHome, "gocket"))
+	v.AddConfigPath(".")
+	v.SetConfigName("config")
+
+	v.AutomaticEnv()
+	v.ReadInConfig()
+
+	return v
 }
 
 func Execute() {
-	verifyKey()
+	rootCmd := rootCmd(initConfig())
+	rootCmd.AddCommand(ListCmd())
+	rootCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
+	rootCmd.AddCommand(addCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-func verifyKey() {
-	if viper.Get("key") == "" {
+func verifyKey(cmd *cobra.Command) {
+	if consumerKey == "" {
 		os.Stderr.WriteString(fmt.Sprintf(`
 ERROR: You need a pocket consumer key.
 You can create an application with a key at: https://getpocket.com/developer/apps/
@@ -43,7 +58,16 @@ You can then use the option -k to specify the key.
 You can also write "key: 123_consumer_key" in the file "%s".`,
 			filepath.Join(xdg.ConfigHome, "gocket/config.yml"),
 		))
-		rootCmd.Help()
+		cmd.Help()
 		os.Exit(1)
 	}
+}
+
+func bindFlagToConfig(cmd *cobra.Command, v *viper.Viper) {
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		if !f.Changed && v.IsSet(f.Name) {
+			val := v.Get(f.Name)
+			cmd.Flags().Set(f.Name, fmt.Sprintf("%v", val))
+		}
+	})
 }
