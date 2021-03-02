@@ -17,6 +17,7 @@ const (
 type event struct {
 	action string
 	ID     int
+	title  string
 	listID int
 }
 
@@ -60,8 +61,8 @@ func (v *Tview) List(
 	e := event{}
 	listChangedFunc := func(mod *tview.Modal, action string, e *event) func(int, string, string, rune) {
 		return func(i int, main string, sec string, r rune) {
-			mod.SetText(fmt.Sprintf("Are you sure you want to %s \"%s\"?", action, main))
 			e.ID = IDs[i]
+			e.title = main
 			e.listID = i
 		}
 	}
@@ -72,7 +73,7 @@ func (v *Tview) List(
 			pages.SendToBack("delete")
 			pages.HidePage("delete")
 			if buttonLabel == "Yes" {
-				deleter([]int{e.ID})
+				go deleter([]int{e.ID})
 				list.RemoveItem(e.listID)
 				URLs = append(URLs[:e.listID], URLs[e.listID+1:]...)
 				titles = append(titles[:e.listID], titles[e.listID+1:]...)
@@ -86,14 +87,14 @@ func (v *Tview) List(
 			pages.SendToBack("archive")
 			pages.HidePage("archive")
 			if buttonLabel == "Yes" {
-				archiver([]int{e.ID})
+				go archiver([]int{e.ID})
 				list.RemoveItem(e.listID)
 				URLs = append(URLs[:e.listID], URLs[e.listID+1:]...)
 				titles = append(titles[:e.listID], titles[e.listID+1:]...)
 				IDs = append(IDs[:e.listID], IDs[e.listID+1:]...)
 			}
 		}).SetFocus(0)
-	list.SetChangedFunc(listChangedFunc(archive, "archive", &e))
+	list.SetChangedFunc(listChangedFunc(delete, "delete", &e))
 
 	pages.AddPage("delete", delete, false, false)
 	pages.AddPage("archive", archive, false, false)
@@ -121,10 +122,12 @@ func (v *Tview) List(
 			pages.SendToBack("list")
 			pages.SendToFront("delete")
 			pages.ShowPage("delete")
+			delete.SetText(fmt.Sprintf("Are you sure you want to delete \"%s\"?", e.title))
 		} else if event.Rune() == 'a' {
 			pages.SendToBack("list")
 			pages.SendToFront("archive")
 			pages.ShowPage("archive")
+			archive.SetText(fmt.Sprintf("Are you sure you want to archive \"%s\"?", e.title))
 		}
 
 		return event
