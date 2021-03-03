@@ -49,8 +49,32 @@ func (p *pocket) List(count int, order string, search string) (websites []Websit
 	return
 }
 
+func (p *pocket) ListArchive(count int, order string, search string) (websites []Website) {
+	res, err := p.client.RetrieveArchive(count, order, search)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, e := range res.List {
+		websites = append(websites, Website{
+			ID:    e.ItemID,
+			Title: e.Title(),
+			URL:   e.URL(),
+		})
+	}
+
+	return
+}
+
 func (p *pocket) Archive(IDs []int) {
 	_, err := p.client.Archive(IDs)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (p *pocket) Unarchive(IDs []int) {
+	_, err := p.client.Unarchive(IDs)
 	if err != nil {
 		panic(err)
 	}

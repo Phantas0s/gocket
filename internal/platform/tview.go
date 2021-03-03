@@ -30,6 +30,7 @@ type Tview struct {
 func (t *Tview) List(
 	archiver func(IDs []int),
 	deleter func(IDs []int),
+	adder func(IDs []int),
 	noconfirm bool,
 ) {
 	app := tview.NewApplication()
@@ -71,19 +72,36 @@ func (t *Tview) List(
 			}
 		}).SetFocus(0)
 
-	archive := tview.NewModal().AddButtons([]string{"Yes", "No"}).
-		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-			pages.SendToFront("list")
-			pages.SendToBack("archive")
-			pages.HidePage("archive")
+	extraAction := tview.NewModal()
+	extraName := ""
+	if adder == nil {
+		extraName = "archive"
+		extraAction.AddButtons([]string{"Yes", "No"}).
+			SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+				pages.SendToFront("list")
+				pages.SendToBack("archive")
+				pages.HidePage("archive")
 
-			if buttonLabel == "Yes" {
-				t.act(archiver, list)
-			}
-		}).SetFocus(0)
+				if buttonLabel == "Yes" {
+					t.act(archiver, list)
+				}
+			}).SetFocus(0)
+	} else if archiver == nil {
+		extraName = "add"
+		extraAction.AddButtons([]string{"Yes", "No"}).
+			SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+				pages.SendToFront("list")
+				pages.SendToBack("add")
+				pages.HidePage("add")
+
+				if buttonLabel == "Yes" {
+					t.act(adder, list)
+				}
+			}).SetFocus(0)
+	}
 
 	pages.AddPage("delete", delete, false, false)
-	pages.AddPage("archive", archive, false, false)
+	pages.AddPage("extra", extraAction, false, false)
 
 	delete.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Rune() == 'j' {
@@ -118,10 +136,10 @@ func (t *Tview) List(
 				t.act(archiver, list)
 			} else {
 				title, _ := list.GetItemText(list.GetCurrentItem())
-				archive.SetText(fmt.Sprintf("Are you sure you want to archive \"%s\"?", title))
+				extraAction.SetText(fmt.Sprintf("Are you sure you want to %s \"%s\"?", extraName, title))
 				pages.SendToBack("list")
-				pages.SendToFront("archive")
-				pages.ShowPage("archive")
+				pages.SendToFront("extra")
+				pages.ShowPage("extra")
 			}
 		}
 
@@ -142,7 +160,7 @@ func (t *Tview) List(
 		AddItem(pages, 0, 10, true).
 		AddItem(txt, 0, 1, false)
 
-	fmt.Fprint(txt, "'a' to archive | 'x' to delete")
+	fmt.Fprint(txt, fmt.Sprintf("'a' to %s | 'x' to delete", extraName))
 
 	if err := app.SetRoot(layout, true).Run(); err != nil {
 		panic(err)

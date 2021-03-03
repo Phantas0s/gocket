@@ -166,8 +166,16 @@ func (item Item) Title() string {
 	return title
 }
 
-// Retrieve returns the in Pocket
+func (c *Client) RetrieveArchive(count int, sort string, search string) (*RetrieveResult, error) {
+	return c.fetch(count, sort, search, true)
+}
+
 func (c *Client) Retrieve(count int, sort string, search string) (*RetrieveResult, error) {
+	return c.fetch(count, sort, search, false)
+}
+
+// Retrieve returns the in Pocket
+func (c *Client) fetch(count int, sort string, search string, archive bool) (*RetrieveResult, error) {
 	if sort == "" {
 		sort = SortNewest
 	}
@@ -177,6 +185,10 @@ func (c *Client) Retrieve(count int, sort string, search string) (*RetrieveResul
 	}
 	if search != "" {
 		opts.Search = search
+	}
+
+	if archive {
+		opts.State = "archive"
 	}
 
 	data := retriveRequest{

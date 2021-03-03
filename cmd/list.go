@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"bufio"
 	"os"
-	"strings"
 
 	"github.com/Phantas0s/gocket/internal"
 	"github.com/Phantas0s/gocket/internal/platform"
@@ -24,21 +22,22 @@ func ListCmd() *cobra.Command {
 		},
 	}
 
-	listCmd.Flags().StringVarP(
+	listCmd.AddCommand(archiveCmd())
+	listCmd.PersistentFlags().StringVarP(
 		&order,
 		"order",
 		"o",
 		"newest",
 		"order by 'newest' (default), 'oldest', 'title', or 'url'.",
 	)
-	listCmd.Flags().StringVarP(&search, "search", "s", "", "Only list items with title or URL matching the search.")
-	listCmd.Flags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10).")
+	listCmd.PersistentFlags().StringVarP(&search, "search", "s", "", "Only list items with title or URL matching the search.")
+	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10).")
 
-	listCmd.Flags().BoolVarP(&tui, "tui", "", false, "Display the TUI.")
-	listCmd.Flags().BoolVarP(&title, "title", "t", false, "Display the title the line before the URL.")
+	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the TUI.")
+	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the title the line before the URL.")
 	listCmd.Flags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles.")
-	listCmd.Flags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles.")
-	listCmd.Flags().BoolVarP(&noconfirm, "noconfirm", "", false, "Don't ask for any confirmation.")
+	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles.")
+	listCmd.PersistentFlags().BoolVarP(&noconfirm, "noconfirm", "", false, "Don't ask for any confirmation.")
 
 	return listCmd
 }
@@ -81,21 +80,5 @@ func runList() {
 				pocket.Delete(IDs)
 			}
 		}
-	}
-}
-
-func prompt(message string) bool {
-	os.Stdout.WriteString(message + " (y/n)")
-	reader := bufio.NewReader(os.Stdin)
-	i, err := reader.ReadString('\n')
-	if err != nil {
-		panic(err)
-	}
-
-	if strings.Trim(string(i), "\n") == "y" {
-		return true
-	} else {
-		os.Stdout.WriteString("Aborted.")
-		return false
 	}
 }

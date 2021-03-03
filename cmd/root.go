@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -40,8 +42,8 @@ func initConfig() *viper.Viper {
 func Execute() {
 	rootCmd := rootCmd(initConfig())
 	rootCmd.AddCommand(ListCmd())
-	rootCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
 	rootCmd.AddCommand(addCmd)
+	rootCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -70,4 +72,20 @@ func bindFlagToConfig(cmd *cobra.Command, v *viper.Viper) {
 			cmd.Flags().Set(f.Name, fmt.Sprintf("%v", val))
 		}
 	})
+}
+
+func prompt(message string) bool {
+	os.Stdout.WriteString(message + " (y/n)")
+	reader := bufio.NewReader(os.Stdin)
+	i, err := reader.ReadString('\n')
+	if err != nil {
+		panic(err)
+	}
+
+	if strings.Trim(string(i), "\n") == "y" {
+		return true
+	} else {
+		os.Stdout.WriteString("Aborted.")
+		return false
+	}
 }
