@@ -21,14 +21,16 @@ type event struct {
 	listID int
 }
 
-type Tview struct{}
+type Tview struct {
+	URLs   []string
+	Titles []string
+	IDs    []int
+}
 
-func (v *Tview) List(
-	URLs []string,
-	titles []string,
-	IDs []int,
+func (t *Tview) List(
 	archiver func(IDs []int),
 	deleter func(IDs []int),
+	noconfirm bool,
 ) {
 	app := tview.NewApplication()
 	list := tview.NewList()
@@ -49,8 +51,8 @@ func (v *Tview) List(
 		return event
 	})
 
-	for i, v := range titles {
-		url := URLs[i]
+	for i, v := range t.Titles {
+		url := t.URLs[i]
 		list.AddItem(v, url, 0, func() {
 			openBrowser(url)
 		})
@@ -58,26 +60,14 @@ func (v *Tview) List(
 	}
 	pages.AddPage("list", list, true, true)
 
-	e := event{}
-	listChangedFunc := func(mod *tview.Modal, action string, e *event) func(int, string, string, rune) {
-		return func(i int, main string, sec string, r rune) {
-			e.ID = IDs[i]
-			e.title = main
-			e.listID = i
-		}
-	}
-
 	delete := tview.NewModal().AddButtons([]string{"Yes", "No"}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			pages.SendToFront("list")
 			pages.SendToBack("delete")
 			pages.HidePage("delete")
+
 			if buttonLabel == "Yes" {
-				go deleter([]int{e.ID})
-				list.RemoveItem(e.listID)
-				URLs = append(URLs[:e.listID], URLs[e.listID+1:]...)
-				titles = append(titles[:e.listID], titles[e.listID+1:]...)
-				IDs = append(IDs[:e.listID], IDs[e.listID+1:]...)
+				t.act(deleter, list)
 			}
 		}).SetFocus(0)
 
@@ -86,15 +76,11 @@ func (v *Tview) List(
 			pages.SendToFront("list")
 			pages.SendToBack("archive")
 			pages.HidePage("archive")
+
 			if buttonLabel == "Yes" {
-				go archiver([]int{e.ID})
-				list.RemoveItem(e.listID)
-				URLs = append(URLs[:e.listID], URLs[e.listID+1:]...)
-				titles = append(titles[:e.listID], titles[e.listID+1:]...)
-				IDs = append(IDs[:e.listID], IDs[e.listID+1:]...)
+				t.act(archiver, list)
 			}
 		}).SetFocus(0)
-	list.SetChangedFunc(listChangedFunc(delete, "delete", &e))
 
 	pages.AddPage("delete", delete, false, false)
 	pages.AddPage("archive", archive, false, false)
@@ -117,17 +103,26 @@ func (v *Tview) List(
 			return tcell.NewEventKey(tcell.KeyPgUp, 0, tcell.ModNone)
 		} else if event.Rune() == 'g' {
 			return tcell.NewEventKey(tcell.KeyPgDn, 0, tcell.ModNone)
-			//TODO CTRL+D / CTRL+U?
 		} else if event.Rune() == 'x' {
-			pages.SendToBack("list")
-			pages.SendToFront("delete")
-			pages.ShowPage("delete")
-			delete.SetText(fmt.Sprintf("Are you sure you want to delete \"%s\"?", e.title))
+			if noconfirm {
+				t.act(deleter, list)
+			} else {
+				title, _ := list.GetItemText(list.GetCurrentItem())
+				delete.SetText(fmt.Sprintf("Are you sure you want to delete \"%s\"?", title))
+				pages.SendToBack("list")
+				pages.SendToFront("delete")
+				pages.ShowPage("delete")
+			}
 		} else if event.Rune() == 'a' {
-			pages.SendToBack("list")
-			pages.SendToFront("archive")
-			pages.ShowPage("archive")
-			archive.SetText(fmt.Sprintf("Are you sure you want to archive \"%s\"?", e.title))
+			if noconfirm {
+				t.act(archiver, list)
+			} else {
+				title, _ := list.GetItemText(list.GetCurrentItem())
+				archive.SetText(fmt.Sprintf("Are you sure you want to archive \"%s\"?", title))
+				pages.SendToBack("list")
+				pages.SendToFront("archive")
+				pages.ShowPage("archive")
+			}
 		}
 
 		return event
@@ -154,7 +149,12 @@ func (v *Tview) List(
 	}
 }
 
-func help(app *tview.Application) {
+func (t *Tview) act(action func(IDs []int), list *tview.List) {
+	go action([]int{t.IDs[list.GetCurrentItem()]})
+	t.URLs = append(t.URLs[:list.GetCurrentItem()], t.URLs[list.GetCurrentItem()+1:]...)
+	t.Titles = append(t.Titles[:list.GetCurrentItem()], t.Titles[list.GetCurrentItem()+1:]...)
+	t.IDs = append(t.IDs[:list.GetCurrentItem()], t.IDs[list.GetCurrentItem()+1:]...)
+	list.RemoveItem(list.GetCurrentItem())
 }
 
 // open opens the specified URL in the default browser of the user.

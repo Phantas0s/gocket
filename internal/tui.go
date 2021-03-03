@@ -3,24 +3,14 @@ package internal
 // Layer of indirection to be able to swap the viewer easily.
 
 type viewer interface {
-	List(urls []string, titles []string, IDs []int, archiver func([]int), deleter func([]int))
+	List(archiver func([]int), deleter func([]int), noconfirm bool)
 }
 
 type TUI struct {
-	Instance viewer
-	Pocket   *pocket
+	Viewer viewer
+	Pocket *pocket
 }
 
-func (t *TUI) List(websites []Website) {
-	urls := make([]string, len(websites))
-	titles := make([]string, len(websites))
-	IDs := make([]int, len(websites))
-
-	for k, v := range websites {
-		IDs[k] = v.ID
-		urls[k] = v.URL
-		titles[k] = v.Title
-	}
-
-	t.Instance.List(urls, titles, IDs, t.Pocket.Archive, t.Pocket.Delete)
+func (t *TUI) List(noconfirm bool) {
+	t.Viewer.List(t.Pocket.Archive, t.Pocket.Delete, noconfirm)
 }

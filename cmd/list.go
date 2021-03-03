@@ -47,8 +47,19 @@ func runList() {
 	pocket := internal.CreatePocket(consumerKey)
 	list := pocket.List(count, order, search)
 	if tui {
-		tui := internal.TUI{Instance: &platform.Tview{}, Pocket: pocket}
-		tui.List(list)
+		tv := platform.Tview{
+			IDs:    make([]int, len(list)),
+			URLs:   make([]string, len(list)),
+			Titles: make([]string, len(list)),
+		}
+		for k, v := range list {
+			tv.IDs[k] = v.ID
+			tv.URLs[k] = v.URL
+			tv.Titles[k] = v.Title
+		}
+
+		tui := internal.TUI{Viewer: &tv, Pocket: pocket}
+		tui.List(noconfirm)
 	} else {
 		IDs := []int{}
 		for _, v := range list {
