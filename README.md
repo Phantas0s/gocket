@@ -80,35 +80,20 @@ The options for these two commands are almost identical.
 
 ## TUI Keybindings
 
+
+<pre>
+  <kbd>j</kbd>: up
+  <kbd>k</kbd>: down
+</pre>
+
 ## Video Tutorial
 
-### Newest Article Using Your Browser
+## Acknowledgements
 
-```
-gocket list -k <consumerKey> -c 1 | lynx -
-gocket list -k <consumerKey> -c 1 | xargs firefox
-```
+* I used the project [go-pocket](https://github.com/motemen/go-pocket) as a base. I modified it and built upon it.
+* Thanks to [MariaLetta](https://github.com/MariaLetta/free-gophers-pack) for the awesome and beautiful Gopher pack! I used it for my logo on top.
 
-## References
+## Licence
 
-### Pocket List
+[Apache Licence 2.0](https://choosealicense.com/licenses/apache-2.0/)
 
-https://getpocket.com/my-list
-
-### API
-
-https://etpocket.com/developer/docs/authentication
-https://getpocket.com/developer/docs/v3/retrieve
-
-### Inspiration
-
-[go-pocket](https://github.com/motemen/go-pocket) has been the base I've refactored and built upon. Thanks for this great project!
-https://getpocket.com/developer/apps/
-
-### Libraries
-
-https://pkg.go.dev/github.com/rivo/tview
-
-## Model
-
-Keybindings: https://github.com/jesseduffield/lazydocker/blob/master/docs/keybindings/Keybindings_en.md
