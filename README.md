@@ -65,17 +65,17 @@ The options for these two commands are almost identical.
 
 ## Usage
 
-| Description                                       | Command                          |
-| ----                                              | ----                             |
-| Output every page's URLs                                 | `gocket list`                    |
-| Output the last 5 pages' URLs added                     | `gocket list -c 5`               |
-| Display the last 5 pages added in a TUI           | `gocket list -c 5 --tui`         |
-| Search for "youtube" in titles and URLs           | `gocket list -s "youtube" -t`    |
-| Open the last page added with Firefox             | `gocket list -c 1                | xargs firefox` |
-| Open the last page added with Lynx                | `gocket list -c 1                | lynx -`        |
-| Open the oldest page added with Firefox           | `gocket list -c 1 -o "oldest"    | xargs firefox` |
-| Open the last 5 pages with Firefox and archive it | `gocket list -c 5 -a --noconfirm | xargs firefox` |
-| Open the last page with Firefox and delete it     | `gocket list -c 1 -d --noconfirm | xargs firefox` |
+| Description                                       | Command                                                |
+| ----                                              | ----                                                   |
+| Output every page's URLs                          | `gocket list`                                          |
+| Output the last 5 pages' URLs added               | `gocket list -c 5`                                     |
+| Display the last 5 pages added in a TUI           | `gocket list -c 5 --tui`                               |
+| Search for "youtube" in titles and URLs           | `gocket list -s "youtube" -t`                          |
+| Open the last page added with Firefox             | `gocket list -c 1 &#x7c; xargs firefox`                |
+| Open the last page added with Lynx                | `gocket list -c 1 &#x7c; lynx -`                       |
+| Open the oldest page added with Firefox           | `gocket list -c 1 -o "oldest" &#x7c; xargs firefox`    |
+| Open the last 5 pages with Firefox and archive it | `gocket list -c 5 -a --noconfirm &#x7c; xargs firefox` |
+| Open the last page with Firefox and delete it     | `gocket list -c 1 -d --noconfirm &#x7c; xargs firefox` |
 
 ## TUI Keybindings
 
