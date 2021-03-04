@@ -54,35 +54,33 @@ You have access to different commands. Use the option `-h` for each command to a
 
 ### List
 
-`gocket list`: list your Pocket entries.
-`gocket list archive`: list the archives.
+* `gocket list`: list your Pocket entries.
+* `gocket list archive`: list the archives.
 
 The options for these two commands are almost identical.
 
-### Add
+### Add New URLs
 
-`gocket add <URL>`: Add the URL `<URL>` to pocket.
+* `gocket add <URL>`: Add the URL `<URL>` to pocket. You can add multiple URLs separated with spaces.
 
 ## Usage
 
-| Description                                       | Command                                            |
-| ----                                              | ----                                               |
-| Output every page's URLs                          | `gocket list`                                      |
-| Output the last 5 pages' URLs added               | `gocket list -c 5`                                 |
-| Display the last 5 pages added in a TUI           | `gocket list -c 5 --tui`                           |
-| Search for "youtube" in titles and URLs           | `gocket list -s "youtube" -t`                      |
-| Open the last page added with Firefox             | `gocket list -c 1 \| xargs firefox`                |
-| Open the last page added with Lynx                | `gocket list -c 1 \| lynx -`                       |
-| Open the oldest page added with Firefox           | `gocket list -c 1 -o "oldest" \| xargs firefox`    |
-| Open the last 5 pages with Firefox and archive it | `gocket list -c 5 -a --noconfirm \| xargs firefox` |
-| Open the last page with Firefox and delete it     | `gocket list -c 1 -d --noconfirm \| xargs firefox` |
+| Description                                                         | Command                              |
+| ----                                                                | ----                                 |
+| Output every page's URLs                                            | `gocket list`                        |
+| Output the last 5 pages' URLs added                                 | `gocket list -c 5`                   |
+| Display the last 5 pages added in a TUI                             | `gocket list -c 5 --tui`             |
+| Display pages in a TUI and don't ask confirmation for any operation | `gocket list -c 5 --tui --noconfirm` |
+| Search for "youtube" in titles and URLs                             | `gocket list -s "youtube" -t`        |
+| Open the last page added with Firefox                               | `gocket list -c 1 \                  | xargs firefox` |
+| Open the last page added with Lynx                                  | `gocket list -c 1 \                  | lynx -`        |
+| Open the oldest page added with Firefox                             | `gocket list -c 1 -o "oldest" \      | xargs firefox` |
+| Open the last 5 pages with Firefox and archive it                   | `gocket list -c 5 -a --noconfirm \   | xargs firefox` |
+| Open the last page with Firefox and delete it                       | `gocket list -c 1 -d --noconfirm \   | xargs firefox` |
 
 ## TUI Keybindings
 
-
-
 ## Video Tutorial
-
 
 ### Newest Article Using Your Browser
 
