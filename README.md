@@ -4,7 +4,7 @@
 
 A simple CLI (or TUI) for Pocket.
 
-![Logo of Gocket](./logo.jpg)
+![Logo of Gocket](./logo_smaller.png)
 
 ## Installation
 
@@ -29,23 +29,57 @@ You need to clone this repository and build the binary in the root directory.
 
 You need to authorize gocket to access your Pocket account. It's very easy:
 
-1. Go to [Gocket apps and create an app](https://getpocket.com/developer/apps/).
-2. The easiest way is to create a config file in your current directory or in `$XDG_CONFIG_HOME/gocket/config.yml`
-    * Create an entry with `key` as index and the consumer key as value, i.e `key: 1234-5a6b7c`.
-    * Your config can be YAML, TOML, or JSON file.
-3. You'll have to confirm the authorization: a webpage will open in your new favorite browser to do so.
-4. You can use gocket!
+### Steps
 
-XDG_CONFIG_HOME: (TODO)
-Unix systems: `~/.config` 
-macOS: ~/Library/Application Support
-Windows: %LOCALAPPDATA%
+1. Go to [Gocket apps and create an application](https://getpocket.com/developer/apps/)
+2. Authorize the application to add, modify, and retrieve if you want to use the full set of gocket's feature
+3. You need to pass the consumer key to pocket each time you use it (`-k` option) or you can use a config file:
+    1. Create the file `$XDG_CONFIG_HOME/gocket/config.yml`
+    2. Create an entry with `key` as index and the consumer key as value, for example `key: 1234-5a6b7c`
+    3. Your config can be a YAML, TOML, or JSON file
+3. The first time you use pocket, you'll need to confirm your authorization. A webpage will open automatically in your favorite browser to do so
+4. Enjoy!
 
-If you wonder what's the value of $XDG_CONFIG_HOME for your system, you can look [at this page](https://github.com/adrg/xdg).
+### XDG Home Directory
+
+The value of `$XDG_CONFIG_HOME` depends of your OS. Here are the defaults (if you didn't modify it):
+
+* **Unix systems**: `~/.config`
+* **macOS**: `~/Library/Application Support`
+* **Windows**: `%LOCALAPPDATA%`
+
+## Commands
+
+You have access to different commands. Use the option `-h` for each command to access the help.
+
+### List
+
+`gocket list`: list your Pocket entries.
+`gocket list archive`: list the archives.
+
+The options for these two commands are almost identical.
+
+### Add
+
+`gocket add <URL>`: Add the URL `<URL>` to pocket.
 
 ## Usage
 
-## Keybindings
+| Description                                       | Command                          |
+| ----                                              | ----                             |
+| Output every page's URLs                                 | `gocket list`                    |
+| Output the last 5 pages' URLs added                     | `gocket list -c 5`               |
+| Display the last 5 pages added in a TUI           | `gocket list -c 5 --tui`         |
+| Search for "youtube" in titles and URLs           | `gocket list -s "youtube" -t`    |
+| Open the last page added with Firefox             | `gocket list -c 1                | xargs firefox` |
+| Open the last page added with Lynx                | `gocket list -c 1                | lynx -`        |
+| Open the oldest page added with Firefox           | `gocket list -c 1 -o "oldest"    | xargs firefox` |
+| Open the last 5 pages with Firefox and archive it | `gocket list -c 5 -a --noconfirm | xargs firefox` |
+| Open the last page with Firefox and delete it     | `gocket list -c 1 -d --noconfirm | xargs firefox` |
+
+## TUI Keybindings
+
+
 
 ## Video Tutorial
 
