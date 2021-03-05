@@ -156,21 +156,23 @@ func (t *Tview) List(
 		return event
 	})
 
-	txt := tview.NewTextView().
+	statusBar := tview.NewTextView().
 		SetDynamicColors(true).
 		SetRegions(true).
 		SetWordWrap(true)
 
-	txt.SetBorder(true).
+	statusBar.SetBorder(true).
 		SetBorderColor(tcell.ColorWhite).
 		SetBackgroundColor(tcell.ColorBlack)
 
-	layout := tview.NewFlex().
-		SetDirection(tview.FlexRow).
-		AddItem(pages, 0, 10, true).
-		AddItem(txt, 0, 1, false)
+	layout := tview.NewGrid().
+		SetRows(0, 3).
+		SetColumns(0).
+		SetBorders(false).
+		AddItem(pages, 0, 0, 1, 1, 0, 0, true).
+		AddItem(statusBar, 1, 0, 1, 1, 0, 0, false)
 
-	fmt.Fprint(txt, fmt.Sprintf("'a' to %s | 'x' to delete", extraName))
+	fmt.Fprint(statusBar, fmt.Sprintf("'a' to %s | 'x' to delete", extraName))
 
 	if err := app.SetRoot(layout, true).Run(); err != nil {
 		panic(err)
