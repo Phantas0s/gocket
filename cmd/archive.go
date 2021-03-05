@@ -8,8 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TODO encapsulate option variables into value objects.
+var a bool
+
 func archiveCmd() *cobra.Command {
-	return &cobra.Command{
+	listArchiveCmd := &cobra.Command{
 		Use:   "archive",
 		Short: "List your archive",
 		// TODO write some help
@@ -17,6 +20,9 @@ func archiveCmd() *cobra.Command {
 			runArchive()
 		},
 	}
+	listArchiveCmd.Flags().BoolVarP(&a, "add", "a", false, "Add the listed articles (with confirmation).")
+
+	return listArchiveCmd
 }
 
 func runArchive() {
@@ -46,15 +52,9 @@ func runArchive() {
 			os.Stdout.WriteString(v.URL + "\n")
 		}
 
-		if archive {
-			if noconfirm || prompt("Do you really want to archive all the articles listed?") {
-				pocket.Archive(IDs)
-			}
-		}
-
-		if delete {
-			if noconfirm || prompt("Do you really want to DELETE all the articles listed?") {
-				pocket.Delete(IDs)
+		if a {
+			if noconfirm || prompt("Do you really want to add all the articles listed?") {
+				go pocket.Unarchive(IDs)
 			}
 		}
 	}
