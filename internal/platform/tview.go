@@ -38,6 +38,8 @@ func (t *Tview) List(
 
 	list.SetSelectedTextColor(tcell.ColorBlack)
 	list.SetSelectedBackgroundColor(tcell.ColorBlue)
+	// Don't go to the end of the list if go up at the beginning of it (and vice-versa).
+	list.SetWrapAround(false)
 	list.SetSelectedFocusOnly(true).
 		SetBackgroundColor(tcell.ColorBlack).
 		SetBorder(true).
@@ -113,15 +115,16 @@ func (t *Tview) List(
 	})
 
 	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Rune() == 'j' {
+		switch key := event.Rune(); key {
+		case 'j':
 			return tcell.NewEventKey(tcell.KeyDown, 0, tcell.ModNone)
-		} else if event.Rune() == 'k' {
+		case 'k':
 			return tcell.NewEventKey(tcell.KeyUp, 0, tcell.ModNone)
-		} else if event.Rune() == 'G' {
-			return tcell.NewEventKey(tcell.KeyPgUp, 0, tcell.ModNone)
-		} else if event.Rune() == 'g' {
-			return tcell.NewEventKey(tcell.KeyPgDn, 0, tcell.ModNone)
-		} else if event.Rune() == 'x' {
+		case 'G':
+			return tcell.NewEventKey(tcell.KeyEnd, 0, tcell.ModNone)
+		case 'g':
+			return tcell.NewEventKey(tcell.KeyHome, 0, tcell.ModNone)
+		case 'x':
 			if noconfirm {
 				t.act(deleter, list)
 			} else {
@@ -131,7 +134,7 @@ func (t *Tview) List(
 				pages.SendToFront("delete")
 				pages.ShowPage("delete")
 			}
-		} else if event.Rune() == 'a' {
+		case 'a':
 			if noconfirm {
 				t.act(archiver, list)
 			} else {
@@ -141,6 +144,13 @@ func (t *Tview) List(
 				pages.SendToFront("extra")
 				pages.ShowPage("extra")
 			}
+		}
+
+		switch key := event.Key(); key {
+		case tcell.KeyCtrlD:
+			return tcell.NewEventKey(tcell.KeyPgDn, 0, tcell.ModNone)
+		case tcell.KeyCtrlU:
+			return tcell.NewEventKey(tcell.KeyPgUp, 0, tcell.ModNone)
 		}
 
 		return event
