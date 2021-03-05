@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TODO add all these options into value object.
 var order, search string
 var count int
 var tui, archive, delete, noconfirm, title bool

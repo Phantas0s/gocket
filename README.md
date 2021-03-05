@@ -57,7 +57,9 @@ You have access to different commands. Use the option `-h` for each command to a
 * `gocket list`: list your Pocket entries.
 * `gocket list archive`: list the archives.
 
-The options for these two commands are almost identical.
+The options for these two commands are almost identical. Here are the difference:
+* Use `-a` with `gocket list` to bulk add every listed entry to the archive (with confirmation).
+* Use `-a` with `gocket list archive` to bulk add every listed archive to the unread list (with confirmation).
 
 ### Add New URLs
 
@@ -80,20 +82,30 @@ The options for these two commands are almost identical.
 
 ## TUI Keybindings
 
+### Navigation
 
 <pre>
-  <kbd>j</kbd>: up
-  <kbd>k</kbd>: down
+ <kbd>↑</kbd> or <kbd>k</kbd>: up
+ <kbd>↓</kbd> or <kbd>j</kbd>: down
+ <kbd>PgUp</kbd> or <kbd>CTRL</kbd>+<kbd>u</kbd>: One screen up
+ <kbd>PgDn</kbd> or <kbd>CTRL</kbd>+<kbd>d</kbd>: One screen down
+ <kbd>Home</kbd> or <kbd>g</kbd>: Top of the list
+ <kbd>End</kbd> or <kbd>G</kbd>: Bottom of the list
 </pre>
 
-## Video Tutorial
+### Action
+
+<pre>
+ <kbd>d</kbd>: Delete Pocket entry
+ <kbd>a</kbd>: Add (if list archive) or archive (if list unread)
+</pre>
 
 ## Acknowledgements
 
-* I used the project [go-pocket](https://github.com/motemen/go-pocket) as a base. I modified it and built upon it.
+* Thanks to the project [go-pocket](https://github.com/motemen/go-pocket), I had a quick base I modified and built upon.
 * Thanks to [MariaLetta](https://github.com/MariaLetta/free-gophers-pack) for the awesome and beautiful Gopher pack! I used it for my logo on top.
+* Thanks to [Lukasz Adam](https://lukaszadam.com/illustrations) for his free and amazing illustrations I use basically everywhere.
 
 ## Licence
 
 [Apache Licence 2.0](https://choosealicense.com/licenses/apache-2.0/)
-
