@@ -30,13 +30,13 @@ func ListCmd() *cobra.Command {
 		"newest",
 		"order by 'newest' (default), 'oldest', 'title', or 'url'.",
 	)
-	listCmd.PersistentFlags().StringVarP(&search, "search", "s", "", "Only list items with title or URL matching the search.")
-	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 10, "Number of results (0 for all, default 10).")
+	listCmd.PersistentFlags().StringVarP(&search, "search", "s", "", "Search by title and URL.")
+	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 0, "Number of results (0 for all).")
 
-	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the TUI.")
-	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the title the line before the URL.")
-	listCmd.Flags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles.")
-	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles.")
+	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the results in a TUI.")
+	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the titles.")
+	listCmd.Flags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles (with confirmation).")
+	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles (with confirmation).")
 	listCmd.PersistentFlags().BoolVarP(&noconfirm, "noconfirm", "", false, "Don't ask for any confirmation.")
 
 	return listCmd
@@ -71,13 +71,13 @@ func runList() {
 
 		if archive {
 			if noconfirm || prompt("Do you really want to archive all the articles listed?") {
-				pocket.Archive(IDs)
+				go pocket.Archive(IDs)
 			}
 		}
 
 		if delete {
 			if noconfirm || prompt("Do you really want to DELETE all the articles listed?") {
-				pocket.Delete(IDs)
+				go pocket.Delete(IDs)
 			}
 		}
 	}
