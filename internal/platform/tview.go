@@ -21,10 +21,14 @@ type event struct {
 	listID int
 }
 
+type Entry struct {
+	URL   string
+	Title string
+	ID    int
+}
+
 type Tview struct {
-	URLs   []string
-	Titles []string
-	IDs    []int
+	Entries []Entry
 }
 
 func (t *Tview) List(
@@ -54,10 +58,9 @@ func (t *Tview) List(
 		return event
 	})
 
-	for i, v := range t.Titles {
-		url := t.URLs[i]
-		list.AddItem(v, url, 0, func() {
-			openBrowser(url)
+	for _, v := range t.Entries {
+		list.AddItem(v.Title, v.URL, 0, func() {
+			openBrowser(v.URL)
 		})
 
 	}
@@ -180,10 +183,8 @@ func (t *Tview) List(
 }
 
 func (t *Tview) act(action func(IDs []int), list *tview.List) {
-	go action([]int{t.IDs[list.GetCurrentItem()]})
-	t.URLs = append(t.URLs[:list.GetCurrentItem()], t.URLs[list.GetCurrentItem()+1:]...)
-	t.Titles = append(t.Titles[:list.GetCurrentItem()], t.Titles[list.GetCurrentItem()+1:]...)
-	t.IDs = append(t.IDs[:list.GetCurrentItem()], t.IDs[list.GetCurrentItem()+1:]...)
+	go action([]int{t.Entries[list.GetCurrentItem()].ID})
+	t.Entries = append(t.Entries[:list.GetCurrentItem()], t.Entries[list.GetCurrentItem()+1:]...)
 	list.RemoveItem(list.GetCurrentItem())
 }
 

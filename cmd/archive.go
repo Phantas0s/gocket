@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/Phantas0s/gocket/internal"
-	"github.com/Phantas0s/gocket/internal/platform"
 	"github.com/spf13/cobra"
 )
 
@@ -29,19 +28,8 @@ func runArchive() {
 	pocket := internal.CreatePocket(consumerKey)
 	list := pocket.ListArchive(count, order, search)
 	if tui {
-		tv := platform.Tview{
-			IDs:    make([]int, len(list)),
-			URLs:   make([]string, len(list)),
-			Titles: make([]string, len(list)),
-		}
-		for k, v := range list {
-			tv.IDs[k] = v.ID
-			tv.URLs[k] = v.URL
-			tv.Titles[k] = v.Title
-		}
-
-		tui := internal.TUI{Viewer: &tv, Pocket: pocket}
-		tui.ListArchive(noconfirm)
+		tui := internal.TUI{Pocket: pocket}
+		tui.ListArchive(list, noconfirm)
 	} else {
 		IDs := []int{}
 		for _, v := range list {
@@ -54,7 +42,7 @@ func runArchive() {
 
 		if a {
 			if noconfirm || prompt("Do you really want to add all the articles listed?") {
-				go pocket.Unarchive(IDs)
+				pocket.Unarchive(IDs)
 			}
 		}
 	}
