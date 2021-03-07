@@ -43,7 +43,7 @@ func Execute() {
 	rootCmd := rootCmd(initConfig())
 	rootCmd.AddCommand(ListCmd())
 	rootCmd.AddCommand(addCmd)
-	rootCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required).")
+	rootCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required)")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)

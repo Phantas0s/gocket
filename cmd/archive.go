@@ -13,13 +13,12 @@ var a bool
 func archiveCmd() *cobra.Command {
 	listArchiveCmd := &cobra.Command{
 		Use:   "archive",
-		Short: "List your archive",
-		// TODO write some help
+		Short: "List your Pocket archive",
 		Run: func(cmd *cobra.Command, args []string) {
 			runArchive()
 		},
 	}
-	listArchiveCmd.Flags().BoolVarP(&a, "add", "a", false, "Add the listed articles (with confirmation).")
+	listArchiveCmd.Flags().BoolVarP(&a, "add", "a", false, "Add the listed articles back to unread (with confirmation).")
 
 	return listArchiveCmd
 }
