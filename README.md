@@ -115,7 +115,7 @@ gocket list -c 5 -t | sed 'N;s#\n# /// #' | fzf | awk -F ' /// ' '{print $2}' | 
 
 ## Sponsorship
 
-Consider [sponsoring my work](https://github.com/sponsors/Phantas0s) if you want to see crunchy little CLIs (and TUIs) all over your system.
+Consider [sponsoring my work](https://github.com/sponsors/Phantas0s) if you want to see new, fresh, and crunchy little CLIs (and TUIs) all over your system.
 
 ## Shameless Mouseless Plug
 
