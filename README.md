@@ -1,4 +1,4 @@
-# Gocket
+# gocket
 
 [![Logo of Gocket](./doc/logo_smaller.png)](https://github.com/Phantas0s/gocket/releases/latest)
 
