@@ -1,4 +1,4 @@
-# Gocket
+
 
 [![Logo of Gocket](./doc/logo_smaller.png)](https://github.com/Phantas0s/gocket/releases/latest)
 
@@ -9,7 +9,7 @@ A simple CLI (or TUI) for Pocket.
 * Use a TUI or pipe the pages' URLs (or titles) to any URL you want.
 * Search through your Pocket list.
 
-**Gocket is in early version. Its interface might change. See the [CHANGELOG](./CHANGELOG)**
+**Gocket is in early version. Its interface might change. See the [CHANGELOG](./CHANGELOG.md)**
 
 ## Installation
 
