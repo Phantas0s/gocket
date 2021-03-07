@@ -8,7 +8,7 @@ A simple CLI (or TUI) for Pocket.
 
 * Read your Pocket goodies from your comfy shell.
 * Archive or delete multiple entries easily.
-* Use a TUI or pipe the pages' URLs (or titles) to everything you want.
+* Use a TUI or pipe the pages' URLs (or titles) to any URL you want.
 * Search through your Pocket list.
 
 **Gocket is in early version. Its interface might change. See the [CHANGELOG](./CHANGELOG)**
@@ -39,8 +39,8 @@ You need to authorize gocket to access your Pocket account. It's very easy:
 ### Steps
 
 1. Go to [Gocket apps and create an application](https://getpocket.com/developer/apps/)
-2. Authorize the application to add, modify, and retrieve if you want to use the full set of gocket's feature
-3. You need to pass the consumer key to pocket each time you use it (`-k` option) or you can use a config file:
+2. Authorize the application to **add**, **modify**, and **retrieve** if you want to use the full set of gocket's feature
+3. You need to pass the consumer key to gocket each time you use it (`-k` option) or you can use a config file:
     1. Create the file `$XDG_CONFIG_HOME/gocket/config.yml`
     2. Create an entry with `key` as index and the consumer key as value, for example `key: 1234-5a6b7c`
     3. Your config can be a YAML, TOML, or JSON file
@@ -48,6 +48,8 @@ You need to authorize gocket to access your Pocket account. It's very easy:
 4. Enjoy!
 
 ### XDG Home Directory
+
+Running `gocket list` without any consumer key will display an error message indicating where to create the config file.
 
 The value of `$XDG_CONFIG_HOME` depends of your OS. Here are the defaults (if you didn't modify it):
 
@@ -57,20 +59,21 @@ The value of `$XDG_CONFIG_HOME` depends of your OS. Here are the defaults (if yo
 
 ## Commands
 
-You have access to different commands. Use the option `-h` for each command to access the help.
+Use the option `-h` for each command to output the help.
 
 ### List
 
-* `gocket list`: list your Pocket entries.
+* `gocket list`: list your Pocket pages.
 * `gocket list archive`: list the archives.
 
 The options for these two commands are almost identical. Here are the difference:
+
 * Use `-a` with `gocket list` to bulk add every listed entry to the archive (with confirmation).
 * Use `-a` with `gocket list archive` to bulk add every listed archive to the unread list (with confirmation).
 
-### Add New URLs
+### Adding New Paes
 
-* `gocket add <URL>`: Add the URL `<URL>` to pocket. You can add multiple URLs separated with spaces.
+* `gocket add <URLs...>`: Add the URLs `<URLs....>` to pocket. You can add multiple URLs separated with spaces.
 
 ## Usage
 
@@ -113,6 +116,14 @@ gocket list -c 5 -t | sed 'N;s#\n# /// #' | fzf | awk -F ' /// ' '{print $2}' | 
  <kbd>d</kbd>: Delete Pocket entry
  <kbd>a</kbd>: Add (if list archive) or archive (if list unread)
 </pre>
+
+## Sponsorship
+
+Consider [sponsoring my work](https://github.com/sponsors/Phantas0s) if you want to see crunchy little CLIs (and TUIs) all over your system.
+
+## Shameless Mouseless Plug
+
+Switching between a keyboard and mouse costs cognitive energy. [My book will help you set up a Linux-based development environment](https://themouseless.dev) that keeps your hands on your keyboard. Take the brain power you've been using to juggle input devices and focus it where it belongs: on the things you create.
 
 ## Acknowledgements
 

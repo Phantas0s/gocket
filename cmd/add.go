@@ -8,7 +8,6 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add URL...",
 	Short: "Add URLs to Pocket",
-	// TODO write some help (?)
 	Run: func(cmd *cobra.Command, args []string) {
 		add(args)
 	},

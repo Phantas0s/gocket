@@ -53,6 +53,7 @@ func Execute() {
 
 func verifyKey(cmd *cobra.Command) {
 	if consumerKey == "" {
+		fmt.Printf("----------------------------\n")
 		os.Stderr.WriteString(fmt.Sprintf(`
 ERROR: You need a pocket consumer key.
 You can create an application with a key at: https://getpocket.com/developer/apps/
@@ -60,6 +61,7 @@ You can then use the option -k to specify the key.
 You can also write "key: 123_consumer_key" in the file "%s".`,
 			filepath.Join(xdg.ConfigHome, "gocket/config.yml"),
 		))
+		fmt.Printf("\n\n----------------------------\n\n")
 		cmd.Help()
 		os.Exit(1)
 	}
