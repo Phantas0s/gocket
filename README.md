@@ -1,6 +1,6 @@
 # Gocket
 
-![Logo of Gocket](./logo_smaller.png)
+[![Logo of Gocket](./doc/logo_smaller.png)](https://github.com/Phantas0s/gocket/releases/latest)
 
 A simple CLI (or TUI) for Pocket.
 
@@ -22,9 +22,10 @@ You can simply grab the [latest binary file](https://github.com/Phantas0s/gocket
 If you use a Linux-based OS, here's a simple way to download gocket and move it to `/usr/local/bin`. You can then call it wherever you want.
 
 ```shell
-curl -LO https://raw.githubusercontent.com/Phantas0s/gocket/master/install/linux.sh && \
-./linux.sh && \
-rm linux.sh
+curl -LO https://raw.githubusercontent.com/Phantas0s/gocket/master/install/linux.sh /tmp \
+&& chmod 755 /tmp/linux.sh
+&& /tmp/linux.sh && \
+rm /tmp/linux.sh
 ```
 ### Manual installation
 

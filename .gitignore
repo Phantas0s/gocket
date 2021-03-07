@@ -1,4 +1,5 @@
 gocket
 run.sh
 testdata
-goreleaser
+goreleaser.sh
+.goreleaser.yml
