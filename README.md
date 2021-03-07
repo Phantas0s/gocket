@@ -2,8 +2,6 @@
 
 # Gocket
 
-![Logo of Gocket](./logo_smaller.png)
-
 A simple CLI (or TUI) for Pocket.
 
 * Read your Pocket goodies from your comfy shell.
