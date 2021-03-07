@@ -1,6 +1,6 @@
-# WIP - this is not ready yet :)
-
 # Gocket
+
+![Logo of Gocket](./logo_smaller.png)
 
 A simple CLI (or TUI) for Pocket.
 
