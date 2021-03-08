@@ -11,6 +11,7 @@ A simple CLI (or TUI) for Pocket.
 * Archive or delete multiple entries easily.
 * Use a TUI or pipe the pages' URLs (or titles) to any URL you want.
 * Search through your Pocket list.
+* Works on Linux, macOS (not tested), and Windows (not tested).
 
 **Gocket is in early version. Its interface might change. See the [CHANGELOG](./CHANGELOG.md)**
 
@@ -76,6 +77,8 @@ The options for these two commands are almost identical. Here are the difference
 
 ## Usage
 
+If you choose to use the TUI, you can select a page and open it with your favorite browser using the `ENTER` key.
+
 | Description                                                         | Command                              |
 | ----                                                                | ----                                 |
 | Output every page's URLs                                            | `gocket list`                        |
@@ -126,6 +129,7 @@ If you don't like YAML, you can use JSON or TOML if you want.
 ### Action
 
 <pre>
+ <kbd>ENTER</kbd>: Open the selected page with your favorite browser
  <kbd>d</kbd>: Delete Pocket entry
  <kbd>a</kbd>: Add (if list archive) or archive (if list unread)
 </pre>
