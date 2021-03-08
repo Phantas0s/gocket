@@ -2,7 +2,7 @@
 
 [![Logo of Gocket](./doc/logo_smaller.png)](https://github.com/Phantas0s/gocket/releases/latest)
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/Phantas0s/gocket)](https://goreportcard.com/report/github.com/Phantas0s/gocket) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/88995a866bc842f29aa8ef64a494a945)](https://www.codacy.com/gh/Phantas0s/gocket/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Phantas0s/gocket&amp;utm_campaign=Badge_Grade) [![Hits-of-Code](https://hitsofcode.com/github/phantas0s/gocket)](https://hitsofcode.com/view/github/phantas0s/gocket) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
+![travis CLI](https://travis-ci.com/Phantas0s/gocket.svg?branch=master&style=for-the-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/Phantas0s/gocket)](https://goreportcard.com/report/github.com/Phantas0s/gocket) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/88995a866bc842f29aa8ef64a494a945)](https://www.codacy.com/gh/Phantas0s/gocket/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Phantas0s/gocket&amp;utm_campaign=Badge_Grade) [![Hits-of-Code](https://hitsofcode.com/github/phantas0s/gocket)](https://hitsofcode.com/view/github/phantas0s/gocket) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Gocket%20-%20CLI%20and%20TUI%20for%20Pocket%20:&url=https%3A%2F%2Fgithub.com%2Fphantas0s%2Fgocket&hashtags=developers,mouseless,terminal,CLI,golang)
 
 A simple CLI (or TUI) for Pocket.
@@ -140,7 +140,7 @@ Switching between a keyboard and mouse costs cognitive energy. [My book will hel
 
 ## Acknowledgements
 
-* Thanks to the project [go-pocket](https://github.com/motemen/go-pocket), I had a quick base I modified and built upon.
+* Thanks to the project [go-pocket](https://github.com/motemen/go-pocket), it gave me the basic data structures and other ideas.
 * Thanks to [MariaLetta](https://github.com/MariaLetta/free-gophers-pack) for the awesome and beautiful Gopher pack! I used it for my logo on top.
 * Thanks to [Lukasz Adam](https://lukaszadam.com/illustrations) for his free and amazing illustrations I use basically everywhere.
 
