@@ -2,6 +2,9 @@
 
 [![Logo of Gocket](./doc/logo_smaller.png)](https://github.com/Phantas0s/gocket/releases/latest)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Phantas0s/gocket)](https://goreportcard.com/report/github.com/Phantas0s/gocket) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/88995a866bc842f29aa8ef64a494a945)](https://www.codacy.com/gh/Phantas0s/gocket/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Phantas0s/gocket&amp;utm_campaign=Badge_Grade) [![Hits-of-Code](https://hitsofcode.com/github/phantas0s/gocket)](https://hitsofcode.com/view/github/phantas0s/gocket) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Gocket%20-%20CLI%20and%20TUI%20for%20Pocket%20:&url=https%3A%2F%2Fgithub.com%2Fphantas0s%2Fgocket&hashtags=developers,mouseless,terminal,CLI,golang)
+
 A simple CLI (or TUI) for Pocket.
 
 * Read your Pocket goodies from your comfy shell.
@@ -93,7 +96,21 @@ As a bonus for Linux users (might work on macOS too), you can use [fzf](https://
 gocket list -c 5 -t | sed 'N;s#\n# /// #' | fzf | awk -F ' /// ' '{print $2}' | xargs firefox
 ```
 
-## TUI Keybindings
+## Configuration
+
+You can add to the config file `$XDG_CONFIG_HOME/gocket/config.yml` the same options you can add to the CLI. For example, if you always want to use the TUI, you can add:
+
+```
+tui: true
+```
+
+If you add options already defined in the config file when running the `gocket` command, they will overwrite them. For example, if you have the TUI sets to true in the config and you run `gocket list -c 5 --tui=false`, you won't use the TUI.
+
+In short, using the config file is a nice way to define the default options you want to use while keeping the possibility to overwrite them.
+
+If you don't like YAML, you can use JSON or TOML if you want.
+
+## TUI Keystrokes
 
 ### Navigation
 
