@@ -30,7 +30,8 @@ curl -L https://raw.githubusercontent.com/Phantas0s/gocket/master/install/linux.
 ```
 ### Manual installation
 
-You need to clone this repository and build the binary in the root directory.
+* You need the last version of Golang installed.
+* You need to clone this repository and build the binary in the root directory with the command `go build`.
 
 ## Authorization
 
