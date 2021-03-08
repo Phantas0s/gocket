@@ -9,7 +9,7 @@ A simple CLI (or TUI) for Pocket.
 
 * Read your Pocket goodies from your comfy shell.
 * Archive or delete multiple entries easily.
-* Use a TUI or pipe the pages' URLs (or titles) to any URL you want.
+* Use a TUI or pipe the pages' URLs (or titles) to any CLI you want.
 * Search through your Pocket list.
 * Works on Linux, macOS (not tested), and Windows (not tested).
 
