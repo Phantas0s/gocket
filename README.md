@@ -13,6 +13,8 @@ A simple CLI (or TUI) for Pocket.
 * Search through your Pocket list.
 * Works on Linux, macOS (not tested), and Windows (not tested).
 
+[screenshot of gocket tui](./doc/screenshot.jpg)
+
 **Gocket is in early version. Its interface might change. See the [CHANGELOG](./CHANGELOG.md)**
 
 ## Installation
