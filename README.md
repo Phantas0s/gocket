@@ -92,7 +92,7 @@ If you choose to use the TUI, you can select a page and open it with your favori
 | Open the oldest page added with Firefox                             | `gocket list -c 1 -o "oldest" \| xargs firefox` |
 | Open the last 5 pages with Firefox and archive them                 | `gocket list -c 5 -a --noconfirm \| xargs firefox` |
 | Open the last page with Firefox and delete it                       | `gocket list -c 1 -d --noconfirm \| xargs firefox` |
-| Print only the pages' titles                                        | `gocket list -c 10 -t | sed 'n;d'` |
+| Print only the pages' titles                                        | `gocket list -c 10 -t \| sed 'n;d'` |
 
 As a bonus for Linux users (might work on macOS too), you can use [fzf](https://github.com/junegunn/fzf) to fuzzy search the page you want and open it with Firefox:
 
