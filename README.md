@@ -74,9 +74,15 @@ The options for these two commands are almost identical. Here are the difference
 * Use `-a` with `gocket list` to bulk add every listed entry to the archive (with confirmation).
 * Use `-a` with `gocket list archive` to bulk add every listed archive to the unread list (with confirmation).
 
-### Adding New Paes
+### Adding New Pages
 
 * `gocket add <URLs...>`: Add the URLs `<URLs....>` to pocket. You can add multiple URLs separated with spaces.
+
+This command will read the standard input stream (stdin) if no argument is given. For example:
+
+```
+echo "https://thevaluable.dev" | gocket add
+```
 
 ## Usage
 
@@ -102,19 +108,17 @@ As a bonus for Linux users (might work on macOS too), you can use [fzf](https://
 gocket list -c 5 -t | sed 'N;s#\n# /// #' | fzf | awk -F ' /// ' '{print $2}' | xargs firefox
 ```
 
-## Configuration
+## Option, Configuration, and Environment Variables
 
-You can add to the config file `$XDG_CONFIG_HOME/gocket/config.yml` the same options you can add to the CLI. For example, if you always want to use the TUI, you can add:
+You can provide the different options to gocket using:
 
-```
-tui: true
-```
+1. Command-line options (i.e `gocket list --tui`)
+2. Environment variables (i.e `export GOCKET_TUI=true`)
+3. Configuration file (i.e `tui: true` in `$XDG_CONFIG_HOME/gocket/config.yaml|json|toml`)
 
-If you add options already defined in the config file when running the `gocket` command, they will overwrite them. For example, if you have the TUI sets to true in the config and you run `gocket list -c 5 --tui=false`, you won't use the TUI.
+If these options are defined multiple times, the priorities follow the order above (from higher priority to lower).
 
-In short, using the config file is a nice way to define the default options you want to use while keeping the possibility to overwrite them.
-
-If you don't like YAML, you can use JSON or TOML if you want.
+The names of the environment variables need to be uppercase and prefixed with `GOCKET_`. Every hyphen `-` in the option's name needs to be replaced with an underscore `_`.
 
 ## TUI Keystrokes
 
