@@ -32,8 +32,8 @@ func CreatePocket(consumerKey string) *pocket {
 	}
 }
 
-func (p *pocket) List(count int, order string, search string) (websites []Website) {
-	res, err := p.client.Retrieve(count, order, search)
+func (p *pocket) List(count int, order string, search string, filter string) (websites []Website) {
+	res, err := p.client.Retrieve(count, order, search, filter)
 	if err != nil {
 		panic(err)
 	}
@@ -49,8 +49,8 @@ func (p *pocket) List(count int, order string, search string) (websites []Websit
 	return
 }
 
-func (p *pocket) ListArchive(count int, order string, search string) (websites []Website) {
-	res, err := p.client.RetrieveArchive(count, order, search)
+func (p *pocket) ListArchive(count int, order string, search string, filter string) (websites []Website) {
+	res, err := p.client.RetrieveArchive(count, order, search, filter)
 	if err != nil {
 		panic(err)
 	}
