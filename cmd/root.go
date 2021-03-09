@@ -16,6 +16,8 @@ import (
 
 var consumerKey string
 
+const envPrefix = "gocket"
+
 func rootCmd(v *viper.Viper) *cobra.Command {
 	return &cobra.Command{
 		Use:   "gocket",
@@ -33,7 +35,9 @@ func initConfig() *viper.Viper {
 	v.AddConfigPath(".")
 	v.SetConfigName("config")
 
+	v.SetEnvPrefix(envPrefix)
 	v.AutomaticEnv()
+
 	v.ReadInConfig()
 
 	return v
@@ -69,6 +73,10 @@ You can also write "key: 123_consumer_key" in the file "%s".`,
 
 func bindFlagToConfig(cmd *cobra.Command, v *viper.Viper) {
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		if strings.Contains(f.Name, "-") {
+			envVarSuffix := strings.ToUpper(strings.ReplaceAll(f.Name, "-", "_"))
+			v.BindEnv(f.Name, fmt.Sprintf("%s_%s", envPrefix, envVarSuffix))
+		}
 		if !f.Changed && v.IsSet(f.Name) {
 			val := v.Get(f.Name)
 			cmd.Flags().Set(f.Name, fmt.Sprintf("%v", val))
