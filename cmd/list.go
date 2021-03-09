@@ -12,7 +12,7 @@ var order, search, filter string
 var count int
 var tui, archive, delete, noconfirm, title bool
 
-func ListCmd() *cobra.Command {
+func listCmd() *cobra.Command {
 	listCmd := &cobra.Command{
 		Use:   "list",
 		Short: "List your Pocket pages",

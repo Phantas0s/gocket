@@ -1,3 +1,9 @@
+## [0.2.1] - 2021-03-09
+
+### Added
+
+* `gocket add` - verbose `-v` option to display a message when URLs are successfully added
+
 ## [0.2.0] - 2021-03-09
 
 ### Added

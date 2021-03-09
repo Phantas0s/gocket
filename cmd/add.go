@@ -10,12 +10,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var addCmd = &cobra.Command{
-	Use:   "add URL...",
-	Short: "Add URLs to Pocket",
-	Run: func(cmd *cobra.Command, args []string) {
-		add(args)
-	},
+var verbose bool
+
+func addCmd() *cobra.Command {
+	addCmd := &cobra.Command{
+		Use:   "add URL...",
+		Short: "Add URLs to Pocket",
+		Run: func(cmd *cobra.Command, args []string) {
+			add(args)
+		},
+	}
+
+	addCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Output success messages.")
+
+	return addCmd
 }
 
 func add(URLs []string) {
@@ -26,6 +34,9 @@ func add(URLs []string) {
 	pocket := internal.CreatePocket(consumerKey)
 	for _, v := range URLs {
 		pocket.Add(v)
+		if verbose {
+			fmt.Fprintf(os.Stdout, "Added: %s\n", v)
+		}
 	}
 }
 

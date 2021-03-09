@@ -45,8 +45,8 @@ func initConfig() *viper.Viper {
 
 func Execute() {
 	rootCmd := rootCmd(initConfig())
-	rootCmd.AddCommand(ListCmd())
-	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(listCmd())
+	rootCmd.AddCommand(addCmd())
 	rootCmd.PersistentFlags().StringVarP(&consumerKey, "key", "k", "", "Pocket consumer key (required)")
 
 	if err := rootCmd.Execute(); err != nil {
@@ -58,6 +58,7 @@ func Execute() {
 func verifyKey(cmd *cobra.Command) {
 	if consumerKey == "" {
 		fmt.Printf("----------------------------\n")
+		// TODO replace with Fprintf
 		os.Stderr.WriteString(fmt.Sprintf(`
 ERROR: You need a pocket consumer key.
 You can create an application with a key at: https://getpocket.com/developer/apps/

@@ -84,6 +84,8 @@ This command will read the standard input stream (stdin) if no argument is given
 echo "https://thevaluable.dev" | gocket add
 ```
 
+If you want to display a message when each URL is successfully added, use the option verbose (`-v`).
+
 ## Usage
 
 If you choose to use the TUI, you can select a page and open it with your favorite browser using the `ENTER` key.
