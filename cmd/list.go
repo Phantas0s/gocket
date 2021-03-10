@@ -35,7 +35,7 @@ func listCmd() *cobra.Command {
 	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 0, "Number of results (0 for all)")
 
 	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the results in a TUI")
-	listCmd.PersistentFlags().BoolVarP(&title, "title", "", false, "Display the titles")
+	listCmd.PersistentFlags().BoolVarP(&title, "title", "t", false, "Display the titles")
 	listCmd.Flags().BoolVarP(&archive, "archive", "a", false, "Archive the listed articles (with confirmation)")
 	listCmd.PersistentFlags().BoolVarP(&delete, "delete", "d", false, "Delete the listed articles (with confirmation)")
 	listCmd.PersistentFlags().BoolVarP(&noconfirm, "noconfirm", "", false, "Don't ask for any confirmation")

@@ -59,10 +59,10 @@ func (t *Tview) List(
 	})
 
 	for _, v := range t.Entries {
-		list.AddItem(v.Title, v.URL, 0, func() {
-			openBrowser(v.URL)
+		url := v.URL
+		list.AddItem(v.Title, url, 0, func() {
+			openBrowser(url)
 		})
-
 	}
 	pages.AddPage("list", list, true, true)
 

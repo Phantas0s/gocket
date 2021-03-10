@@ -1,3 +1,8 @@
+## [0.2.2] - 2021-03-10
+
+* Fix error when trying to access URL via TUI (always last URL of the list was used)
+* Add back the missing short form for the title option
+
 ## [0.2.1] - 2021-03-09
 
 ### Added
