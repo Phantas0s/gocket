@@ -1,5 +1,7 @@
 ## [0.2.2] - 2021-03-10
 
+### Fixed
+
 * Fix error when trying to access URL via TUI (always last URL of the list was used)
 * Add back the missing short form for the title option
 
