@@ -148,9 +148,11 @@ The names of the environment variables need to be uppercase and prefixed with `G
 
 Consider [sponsoring my work](https://github.com/sponsors/Phantas0s) if you want to see new, fresh, and crunchy little CLIs (and TUIs) all over your system.
 
-## Shameless Mouseless Plug
+## Building Your Mouseless Development Environment
 
 Switching between a keyboard and mouse costs cognitive energy. [My book will help you set up a Linux-based development environment](https://themouseless.dev) that keeps your hands on your keyboard. Take the brain power you've been using to juggle input devices and focus it where it belongs: on the things you create.
+
+You'll learn how to write your own installation scripts too!
 
 ## Acknowledgements
 
