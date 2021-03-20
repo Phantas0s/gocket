@@ -75,8 +75,8 @@ You can also write "key: 123_consumer_key" in the file "%s".`,
 func bindFlagToConfig(cmd *cobra.Command, v *viper.Viper) {
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
 		if strings.Contains(f.Name, "-") {
-			envVarSuffix := strings.ToUpper(strings.Replace(f.Name, "-", "_", -1))
-			v.BindEnv(f.Name, fmt.Sprintf("%s_%s", envPrefix, envVarSuffix))
+			envVarSuffix := strings.Replace(f.Name, "-", "_", -1)
+			v.BindEnv(f.Name, strings.ToUpper(fmt.Sprintf("%s_%s", envPrefix, envVarSuffix)))
 		}
 		if !f.Changed && v.IsSet(f.Name) {
 			val := v.Get(f.Name)
