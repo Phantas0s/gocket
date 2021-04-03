@@ -1,3 +1,3 @@
 #!/bin/bash
 
-goreleaser && rm -rf dist/ && cd -
+goreleaser build --rm-dist

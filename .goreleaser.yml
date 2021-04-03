@@ -4,7 +4,7 @@ before:
     - go mod download
 builds:
   - id: main
-    ldflags: -s -w -X github.com/Phantas0s/gocket/cmd/version.current={{.Version}} -X github.com/Phantas0s/gocket/cmd/version.buildDate={{.Date}}
+    ldflags: -s -w -X github.com/Phantas0s/gocket/cmd.current={{.Version}} -X github.com/Phantas0s/gocket/cmd.buildDate={{.Date}}
     goos:
       - windows
       - darwin
