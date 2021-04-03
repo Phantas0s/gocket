@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 
 	"github.com/spf13/cobra"
@@ -17,7 +18,7 @@ func versionCmd() *cobra.Command {
 		Use:   "version",
 		Short: "Display gocket version",
 		Run: func(cmd *cobra.Command, args []string) {
-			version()
+			fmt.Fprintln(os.Stdout, version())
 		},
 	}
 
