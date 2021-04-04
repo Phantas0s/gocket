@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -196,6 +197,7 @@ func openBrowser(url string) error {
 	switch runtime.GOOS {
 	case "windows":
 		cmd = "cmd"
+		url = strings.Replace(url, "&", "^&", -1)
 		args = []string{"/c", "start"}
 	case "darwin":
 		cmd = "open"
