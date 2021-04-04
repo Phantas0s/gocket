@@ -1,3 +1,3 @@
 #!/bin/bash
 
-goreleaser build --rm-dist
+goreleaser release --rm-dist
