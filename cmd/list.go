@@ -8,7 +8,7 @@ import (
 )
 
 // TODO add all these options into value object.
-var order, search, filter string
+var order, search, filter, tag string
 var count int
 var tui, archive, delete, noconfirm, title bool
 
@@ -32,6 +32,7 @@ func listCmd() *cobra.Command {
 	)
 	listCmd.PersistentFlags().StringVarP(&search, "search", "s", "", "Search by title and URL")
 	listCmd.PersistentFlags().StringVarP(&filter, "filter", "f", "article", "filter by type ('article', 'video', 'image')")
+	listCmd.PersistentFlags().StringVarP(&tag, "tag", "", "tag", "filter by tag")
 	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 0, "Number of results (0 for all)")
 
 	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the results in a TUI")
@@ -45,7 +46,7 @@ func listCmd() *cobra.Command {
 
 func runList() {
 	pocket := internal.CreatePocket(consumerKey)
-	list := pocket.List(count, order, search, filter)
+	list := pocket.List(count, order, search, filter, tag)
 	if tui {
 		tui := internal.TUI{Pocket: pocket}
 		tui.List(list, noconfirm)

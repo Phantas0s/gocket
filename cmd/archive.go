@@ -25,7 +25,7 @@ func archiveCmd() *cobra.Command {
 
 func runArchive() {
 	pocket := internal.CreatePocket(consumerKey)
-	list := pocket.ListArchive(count, order, search, filter)
+	list := pocket.ListArchive(count, order, search, filter, tag)
 	if tui {
 		tui := internal.TUI{Pocket: pocket}
 		tui.ListArchive(list, noconfirm)
