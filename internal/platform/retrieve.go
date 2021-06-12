@@ -166,16 +166,16 @@ func (item Item) Title() string {
 	return title
 }
 
-func (c *Client) RetrieveArchive(count int, sort string, search string, filter string) (*RetrieveResult, error) {
-	return c.fetch(count, sort, search, filter, true)
+func (c *Client) RetrieveArchive(count int, sort string, search string, filter string, tag string) (*RetrieveResult, error) {
+	return c.fetch(count, sort, search, filter, tag, true)
 }
 
-func (c *Client) Retrieve(count int, sort string, search string, filter string) (*RetrieveResult, error) {
-	return c.fetch(count, sort, search, filter, false)
+func (c *Client) Retrieve(count int, sort string, search string, filter string, tag string) (*RetrieveResult, error) {
+	return c.fetch(count, sort, search, filter, tag, false)
 }
 
 // Retrieve returns the in Pocket
-func (c *Client) fetch(count int, sort string, search string, filter string, archive bool) (*RetrieveResult, error) {
+func (c *Client) fetch(count int, sort string, search string, filter string, tag string, archive bool) (*RetrieveResult, error) {
 	if sort == "" {
 		sort = SortNewest
 	}
@@ -189,6 +189,10 @@ func (c *Client) fetch(count int, sort string, search string, filter string, arc
 
 	if archive {
 		opts.State = "archive"
+	}
+
+	if tag != "" {
+		opts.Tag = tag
 	}
 
 	opts.ContentType = filter
