@@ -1,3 +1,7 @@
+## [NEXT RELEASE]
+
+* Add `--tag` option
+
 ## [0.2.2] - 2021-03-10
 
 ### Fixed
