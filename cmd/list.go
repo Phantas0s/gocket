@@ -31,8 +31,8 @@ func listCmd() *cobra.Command {
 		"order by 'newest', 'oldest', 'title', or 'url'",
 	)
 	listCmd.PersistentFlags().StringVarP(&search, "search", "s", "", "Search by title and URL")
-	listCmd.PersistentFlags().StringVarP(&filter, "filter", "f", "article", "filter by type ('article', 'video', 'image')")
-	listCmd.PersistentFlags().StringVarP(&tag, "tag", "", "tag", "filter by tag")
+	listCmd.PersistentFlags().StringVarP(&filter, "filter", "f", "article", "Filter by type ('article', 'video', 'image')")
+	listCmd.PersistentFlags().StringVarP(&tag, "tag", "", "", "Filter by tag")
 	listCmd.PersistentFlags().IntVarP(&count, "count", "c", 0, "Number of results (0 for all)")
 
 	listCmd.PersistentFlags().BoolVarP(&tui, "tui", "", false, "Display the results in a TUI")

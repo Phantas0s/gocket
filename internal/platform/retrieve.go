@@ -166,11 +166,23 @@ func (item Item) Title() string {
 	return title
 }
 
-func (c *Client) RetrieveArchive(count int, sort string, search string, filter string, tag string) (*RetrieveResult, error) {
+func (c *Client) RetrieveArchive(
+	count int,
+	sort string,
+	search string,
+	filter string,
+	tag string,
+) (*RetrieveResult, error) {
 	return c.fetch(count, sort, search, filter, tag, true)
 }
 
-func (c *Client) Retrieve(count int, sort string, search string, filter string, tag string) (*RetrieveResult, error) {
+func (c *Client) Retrieve(
+	count int,
+	sort string,
+	search string,
+	filter string,
+	tag string,
+) (*RetrieveResult, error) {
 	return c.fetch(count, sort, search, filter, tag, false)
 }
 
@@ -187,12 +199,12 @@ func (c *Client) fetch(count int, sort string, search string, filter string, tag
 		opts.Search = search
 	}
 
-	if archive {
-		opts.State = "archive"
-	}
-
 	if tag != "" {
 		opts.Tag = tag
+	}
+
+	if archive {
+		opts.State = "archive"
 	}
 
 	opts.ContentType = filter
