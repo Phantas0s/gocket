@@ -32,7 +32,7 @@ curl -L https://raw.githubusercontent.com/Phantas0s/gocket/master/install/linux.
 ```
 ### Manual installation
 
-* You need the last version of Golang installed.
+* You need the latest version of Golang installed.
 * You need to clone this repository and build the binary in the root directory with the command `go build`.
 
 ## Authorization
@@ -41,13 +41,13 @@ You need to authorize gocket to access your Pocket account. It's very easy:
 
 ### Steps
 
-1. Go to [Gocket apps and create an application](https://getpocket.com/developer/apps/)
-2. Authorize the application to **add**, **modify**, and **retrieve** if you want to use the full set of gocket's feature
+1. Go to [Pocket apps and create an application](https://getpocket.com/developer/apps/)
+2. Authorize the application to **add**, **modify**, and **retrieve** if you want to use the full set of gocket's features
 3. You need to pass the consumer key to gocket each time you use it (`-k` option) or you can use a config file:
     1. Create the file `$XDG_CONFIG_HOME/gocket/config.yml`
     2. Create an entry with `key` as index and the consumer key as value, for example `key: 1234-5a6b7c`
     3. Your config can be a YAML, TOML, or JSON file
-3. The first time you use pocket, you'll need to confirm your authorization. A webpage will open automatically in your favorite browser to do so
+3. The first time you use gocket, you'll need to confirm your authorization. A webpage will open automatically in your favorite browser to do so
 4. Enjoy!
 
 ### XDG Home Directory
@@ -84,11 +84,11 @@ This command will read the standard input stream (stdin) if no argument is given
 echo "https://thevaluable.dev" | gocket add
 ```
 
-If you want to display a message when each URL is successfully added, use the option verbose (`-v`).
+If you want to display a message when each URL is successfully added, use the verbose option (`-v`).
 
 ## Usage
 
-If you choose to use the TUI, you can select a page and open it with your favorite browser using the `ENTER` key.
+If you choose to use the TUI, you can select a page and open it with your default browser using the `ENTER` key.
 
 | Description                                                         | Command                              |
 | ----                                                                | ----                                 |
@@ -105,7 +105,7 @@ If you choose to use the TUI, you can select a page and open it with your favori
 | Open the last page added with Firefox and delete it                 | `gocket list -c 1 -d --noconfirm \| xargs firefox` |
 | Print only the pages' titles                                        | `gocket list -c 10 -t \| sed 'n;d'` |
 
-As a bonus for Linux users (might work on macOS too), you can use [fzf](https://github.com/junegunn/fzf) to fuzzy search the page you want and open it with Firefox:
+As a bonus for Linux users (might work on macOS, too), you can use [fzf](https://github.com/junegunn/fzf) to fuzzy search the page you want and open it with Firefox:
 
 ```
 gocket list -c 5 -t | sed 'N;s#\n# /// #' | fzf | awk -F ' /// ' '{print $2}' | xargs firefox
@@ -139,7 +139,7 @@ The names of the environment variables need to be uppercase and prefixed with `G
 ### Action
 
 <pre>
- <kbd>ENTER</kbd>: Open the selected page with your favorite browser
+ <kbd>ENTER</kbd>: Open the selected page with your default browser
  <kbd>d</kbd>: Delete Pocket entry
  <kbd>a</kbd>: Add (if list archive) or archive (if list unread)
 </pre>
